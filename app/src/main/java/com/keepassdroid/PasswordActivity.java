@@ -87,7 +87,7 @@ public class PasswordActivity extends LockingActivity {
     SharedPreferences prefs;
 
     public static void Launch(Activity act, String fileName) throws FileNotFoundException {
-        Launch(act,fileName,"");
+        Launch(act, fileName, "");
     }
 
     public static void Launch(Activity act, String fileName, String keyFile) throws FileNotFoundException {
@@ -119,47 +119,47 @@ public class PasswordActivity extends LockingActivity {
 
         switch (requestCode) {
 
-        case KeePass.EXIT_NORMAL:
-            setEditText(R.id.password, "");
-            App.getDB().clear();
-            break;
+            case KeePass.EXIT_NORMAL:
+                setEditText(R.id.password, "");
+                App.getDB().clear();
+                break;
 
-        case KeePass.EXIT_LOCK:
-            setResult(KeePass.EXIT_LOCK);
-            setEditText(R.id.password, "");
-            finish();
-            App.getDB().clear();
-            break;
-        case FILE_BROWSE:
-            if (resultCode == RESULT_OK) {
-                String filename = data.getDataString();
-                if (filename != null) {
-                    EditText fn = (EditText) findViewById(R.id.pass_keyfile);
-                    fn.setText(filename);
-                    mKeyUri = UriUtil.parseDefaultFile(filename);
-                }
-            }
-            break;
-        case GET_CONTENT:
-        case OPEN_DOC:
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    Uri uri = data.getData();
-                    if (uri != null) {
-                        if (requestCode==GET_CONTENT) {
-                            uri = UriUtil.translate(this, uri);
-                        }
-                        String path = uri.toString();
-                        if (path != null) {
-                            EditText fn = (EditText) findViewById(R.id.pass_keyfile);
-                            fn.setText(path);
-
-                        }
-                        mKeyUri = uri;
+            case KeePass.EXIT_LOCK:
+                setResult(KeePass.EXIT_LOCK);
+                setEditText(R.id.password, "");
+                finish();
+                App.getDB().clear();
+                break;
+            case FILE_BROWSE:
+                if (resultCode == RESULT_OK) {
+                    String filename = data.getDataString();
+                    if (filename != null) {
+                        EditText fn = (EditText) findViewById(R.id.pass_keyfile);
+                        fn.setText(filename);
+                        mKeyUri = UriUtil.parseDefaultFile(filename);
                     }
                 }
-            }
-            break;
+                break;
+            case GET_CONTENT:
+            case OPEN_DOC:
+                if (resultCode == RESULT_OK) {
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        if (uri != null) {
+                            if (requestCode == GET_CONTENT) {
+                                uri = UriUtil.translate(this, uri);
+                            }
+                            String path = uri.toString();
+                            if (path != null) {
+                                EditText fn = (EditText) findViewById(R.id.pass_keyfile);
+                                fn.setText(path);
+
+                            }
+                            mKeyUri = uri;
+                        }
+                    }
+                }
+                break;
         }
     }
 
@@ -200,7 +200,7 @@ public class PasswordActivity extends LockingActivity {
     }
 
     private Uri getKeyFile(Uri dbUri) {
-        if ( mRememberKeyfile ) {
+        if (mRememberKeyfile) {
 
             return App.getFileHistory().getFileByName(dbUri);
         } else {
@@ -223,8 +223,7 @@ public class PasswordActivity extends LockingActivity {
     }
     */
 
-    private void errorMessage(int resId)
-    {
+    private void errorMessage(int resId) {
         Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
     }
 
@@ -232,7 +231,7 @@ public class PasswordActivity extends LockingActivity {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView,
-                boolean isChecked) {
+                                     boolean isChecked) {
 
             String newDefaultFileName;
 
@@ -266,9 +265,8 @@ public class PasswordActivity extends LockingActivity {
         loadDatabase(pass, UriUtil.parseDefaultFile(keyfile));
     }
 
-    private void loadDatabase(String pass, Uri keyfile)
-    {
-        if ( pass.length() == 0 && (keyfile == null || keyfile.toString().length() == 0)) {
+    private void loadDatabase(String pass, Uri keyfile) {
+        if (pass.length() == 0 && (keyfile == null || keyfile.toString().length() == 0)) {
             errorMessage(R.string.error_nopass);
             return;
         }
@@ -291,8 +289,8 @@ public class PasswordActivity extends LockingActivity {
     }
 
     private void setEditText(int resId, String str) {
-        TextView te =  (TextView) findViewById(resId);
-        assert(te == null);
+        TextView te = (TextView) findViewById(resId);
+        assert (te == null);
 
         if (te != null) {
             te.setText(str);
@@ -302,24 +300,17 @@ public class PasswordActivity extends LockingActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
         MenuInflater inflate = getMenuInflater();
         inflate.inflate(R.menu.password, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch ( item.getItemId() ) {
-        case R.id.menu_about:
-            AboutDialog dialog = new AboutDialog(this);
-            dialog.show();
-            return true;
-
-        case R.id.menu_app_settings:
-            AppSettingsActivity.Launch(this);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.menu_app_settings:
+                AppSettingsActivity.Launch(this);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -336,7 +327,7 @@ public class PasswordActivity extends LockingActivity {
 
         @Override
         public void run() {
-            if ( db.passwordEncodingError) {
+            if (db.passwordEncodingError) {
                 PasswordEncodingDialogHelper dialog = new PasswordEncodingDialogHelper();
                 dialog.show(PasswordActivity.this, new OnClickListener() {
 
@@ -346,7 +337,7 @@ public class PasswordActivity extends LockingActivity {
                     }
 
                 });
-            } else if ( mSuccess ) {
+            } else if (mSuccess) {
                 GroupActivity.Launch(PasswordActivity.this);
             } else {
                 displayMessage(PasswordActivity.this);
@@ -361,17 +352,17 @@ public class PasswordActivity extends LockingActivity {
         @Override
         protected Integer doInBackground(Intent... args) {
             Intent i = args[0];
-            String action = i.getAction();;
-            if ( action != null && action.equals(VIEW_INTENT) ) {
+            String action = i.getAction();
+            ;
+            if (action != null && action.equals(VIEW_INTENT)) {
                 Uri incoming = i.getData();
                 mDbUri = incoming;
 
-				mKeyUri = ClipDataCompat.getUriFromIntent(i, KEY_KEYFILE);
+                mKeyUri = ClipDataCompat.getUriFromIntent(i, KEY_KEYFILE);
 
                 if (incoming == null) {
                     return R.string.error_can_not_handle_uri;
-                }
-                else if (incoming.getScheme().equals("file")) {
+                } else if (incoming.getScheme().equals("file")) {
                     String fileName = incoming.getPath();
 
                     if (fileName.length() == 0) {
@@ -385,14 +376,12 @@ public class PasswordActivity extends LockingActivity {
                         return R.string.FileNotFound;
                     }
 
-					if(mKeyUri == null)
-						mKeyUri = getKeyFile(mDbUri);
-                }
-                else if (incoming.getScheme().equals("content")) {
-					if(mKeyUri == null)
-						mKeyUri = getKeyFile(mDbUri);
-                }
-                else {
+                    if (mKeyUri == null)
+                        mKeyUri = getKeyFile(mDbUri);
+                } else if (incoming.getScheme().equals("content")) {
+                    if (mKeyUri == null)
+                        mKeyUri = getKeyFile(mDbUri);
+                } else {
                     return R.string.error_can_not_handle_uri;
                 }
                 password = i.getStringExtra(KEY_PASSWORD);
@@ -404,7 +393,7 @@ public class PasswordActivity extends LockingActivity {
                 password = i.getStringExtra(KEY_PASSWORD);
                 launch_immediately = i.getBooleanExtra(KEY_LAUNCH_IMMEDIATELY, false);
 
-                if ( mKeyUri == null || mKeyUri.toString().length() == 0) {
+                if (mKeyUri == null || mKeyUri.toString().length() == 0) {
                     mKeyUri = getKeyFile(mDbUri);
                 }
             }
@@ -412,7 +401,7 @@ public class PasswordActivity extends LockingActivity {
         }
 
         public void onPostExecute(Integer result) {
-            if(result != null) {
+            if (result != null) {
                 Toast.makeText(PasswordActivity.this, result, Toast.LENGTH_LONG).show();
                 finish();
                 return;
@@ -428,10 +417,10 @@ public class PasswordActivity extends LockingActivity {
             checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
                 public void onCheckedChanged(CompoundButton buttonView,
-                        boolean isChecked) {
+                                             boolean isChecked) {
                     TextView password = (TextView) findViewById(R.id.password);
 
-                    if ( isChecked ) {
+                    if (isChecked) {
                         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     } else {
                         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -457,8 +446,7 @@ public class PasswordActivity extends LockingActivity {
                         i.addCategory(Intent.CATEGORY_OPENABLE);
                         i.setType("*/*");
                         startActivityForResult(i, OPEN_DOC);
-                    }
-                    else {
+                    } else {
                         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                         i.addCategory(Intent.CATEGORY_OPENABLE);
                         i.setType("*/*");

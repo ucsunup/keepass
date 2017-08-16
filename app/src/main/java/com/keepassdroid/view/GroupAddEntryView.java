@@ -28,21 +28,19 @@ import com.android.keepass.R;
 
 public class GroupAddEntryView extends RelativeLayout {
 
-	public GroupAddEntryView(Context context) {
-		this(context, null);
-	}
-	
-	public GroupAddEntryView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		inflate(context);
-	}
-	
-	private void inflate(Context context) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.group_add_entry, this);
-		
-	}
+    public GroupAddEntryView(Context context) {
+        this(context, null);
+    }
 
+    public GroupAddEntryView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
+        inflate(context);
+    }
+
+    private void inflate(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.group_add_entry, this);
+
+    }
 }
