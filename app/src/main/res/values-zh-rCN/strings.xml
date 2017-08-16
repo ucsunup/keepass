@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -141,6 +140,12 @@
     <string name="password_title">输入数据库密码</string>
     <string name="progress_create">创建新数据库中&#8230;</string>
     <string name="progress_title">工作中&#8230;</string>
+    <string name="protection">项目</string>
+    <string name="read_only">只读</string>
+    <string name="read_only_warning">KeePassDroid没有权限写数据库位置，所以你的数据库是只读模式</string>
+    <string name="read_only_kitkat_warning">从Android KitKat开始，一些设备不再允许应用写sd卡</string>
+    <string name="recentfile_title">最近文件历史</string>
+    <string name="recentfile_summary">记住最近使用过的文件名字</string>
     <string name="remember_keyfile_summary">记住密钥文件的位置</string>
     <string name="remember_keyfile_title">保存密钥文件</string>
     <string name="remove_from_filelist">移除</string>
@@ -163,16 +168,16 @@
     <string name="uppercase">大写</string>
     <string name="warning_read_only">你的SD卡目前是只读状态。您可能无法将更改保存到数据库。</string>
     <string name="warning_unmounted">你的SD卡目前尚未安装在您的设备上。你将无法加载或创建您的数据库。</string>
-    
+
     <string-array name="clipboard_timeout_options">
-    	<item>30秒</item>
-    	<item>1分钟</item>
-    	<item>5分钟</item>
-    	<item>从不</item>
+        <item>30秒</item>
+        <item>1分钟</item>
+        <item>5分钟</item>
+        <item>从不</item>
     </string-array>
     <string-array name="list_size_options">
-    	<item>小</item>
-    	<item>中</item>
-    	<item>大</item>
+        <item>小</item>
+        <item>中</item>
+        <item>大</item>
     </string-array>
 </resources>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009-2015 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -18,87 +17,117 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-	<TextView android:id="@+id/about_title" 
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:text="@string/AboutText"/>
-	<ImageView android:id="@+id/divider1"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/about_title"
-	  android:scaleType="fitXY"
-	  tools:ignore="ContentDescription"
-	  android:src="@android:drawable/divider_horizontal_dark"/>
-	<TextView android:id="@+id/version_title" 
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/divider1"
-	  android:text="@string/version_label"/>
-	<TextView android:id="@+id/version"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/divider1"
-	  android:layout_alignParentRight="true"/>
-	<ImageView android:id="@+id/divider2"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/version_title"
-	  android:scaleType="fitXY"
-	  tools:ignore="ContentDescription"
-	  android:src="@android:drawable/divider_horizontal_dark"/>
-	<TextView android:id="@+id/homepage" 
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/divider2"
-	  android:text="@string/about_homepage"/>
-	<TextView android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:text="@string/homepage_short"
-	  android:layout_below="@id/divider2"
-	  android:layout_alignParentRight="true"
-	  android:autoLink="web"/>
-	<TextView android:id="@+id/feedback" 
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/homepage"
-	  android:text="@string/about_feedback"/>
-	<TextView android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:text="@string/issues"
-	  android:layout_below="@id/homepage"
-	  android:layout_alignParentRight="true"
-	  android:autoLink="web"/>
-	<TextView android:id="@+id/Twitter" 
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/feedback"
-	  android:text="@string/about_twitter"/>
-	<TextView android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:text="@string/twitter"
-	  android:layout_below="@id/feedback"
-	  android:layout_alignParentRight="true"
-	  android:autoLink="web"/>
-	<ImageView android:id="@+id/divider3"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/Twitter"
-	  android:scaleType="fitXY"
-	  tools:ignore="ContentDescription"
-	  android:src="@android:drawable/divider_horizontal_dark"/>
-	<TextView android:id="@+id/disclaimer" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_below="@id/divider3"
-	  android:text="@string/disclaimer_formal"/>
-	<Button android:id="@+id/about_button"
-  	  android:layout_height="wrap_content"
-  	  android:layout_width="wrap_content"
-  	  android:layout_below="@id/disclaimer"
-  	  android:layout_centerHorizontal="true"
-  	  android:text="@android:string/ok"
-  	  android:width="100sp"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/about_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/AboutText" />
+
+    <ImageView
+        android:id="@+id/divider1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/about_title"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/divider_horizontal_dark"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/version_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider1"
+        android:text="@string/version_label" />
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/divider1" />
+
+    <ImageView
+        android:id="@+id/divider2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/version_title"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/divider_horizontal_dark"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/homepage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider2"
+        android:text="@string/about_homepage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/divider2"
+        android:autoLink="web"
+        android:text="@string/homepage_short" />
+
+    <TextView
+        android:id="@+id/feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/homepage"
+        android:text="@string/about_feedback" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/homepage"
+        android:autoLink="web"
+        android:text="@string/issues" />
+
+    <TextView
+        android:id="@+id/Twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feedback"
+        android:text="@string/about_twitter" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/feedback"
+        android:autoLink="web"
+        android:text="@string/twitter" />
+
+    <ImageView
+        android:id="@+id/divider3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Twitter"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/divider_horizontal_dark"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/disclaimer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider3"
+        android:text="@string/disclaimer_formal" />
+
+    <Button
+        android:id="@+id/about_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/disclaimer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:width="100sp"
+        android:text="@android:string/ok" />
 </RelativeLayout>

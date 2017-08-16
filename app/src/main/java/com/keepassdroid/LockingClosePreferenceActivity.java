@@ -23,10 +23,10 @@ import com.keepassdroid.timeout.TimeoutHelper;
 
 public class LockingClosePreferenceActivity extends LockingPreferenceActivity {
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-		TimeoutHelper.checkShutdown(this);
-	}
+        TimeoutHelper.checkShutdown(this);
+    }
 }

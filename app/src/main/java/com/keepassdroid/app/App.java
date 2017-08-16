@@ -28,62 +28,62 @@ import com.keepassdroid.compat.PRNGFixes;
 import com.keepassdroid.fileselect.RecentFileHistory;
 
 public class App extends Application {
-	private static Database db = null;
-	private static boolean shutdown = false;
-	private static Calendar calendar = null;
-	private static RecentFileHistory fileHistory = null;
-	
-	public static Database getDB() {
-		if ( db == null ) {
-			db = new Database();
-		}
-		
-		return db;
-	}
-	
-	public static RecentFileHistory getFileHistory() {
-		return fileHistory;
-	}
-	
-	public static void setDB(Database d) {
-		db = d;
-	}
-	
-	public static boolean isShutdown() {
-		return shutdown;
-	}
-	
-	public static void setShutdown() {
-		shutdown = true;
-	}
-	
-	public static void clearShutdown() {
-		shutdown = false;
-	}
-	
-	public static Calendar getCalendar() {
-		if ( calendar == null ) {
-			calendar = Calendar.getInstance();
-		}
-		
-		return calendar;
-	}
+    private static Database db = null;
+    private static boolean shutdown = false;
+    private static Calendar calendar = null;
+    private static RecentFileHistory fileHistory = null;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		
-		fileHistory = new RecentFileHistory(this);
-		
-		PRNGFixes.apply();
-	}
+    public static Database getDB() {
+        if (db == null) {
+            db = new Database();
+        }
 
-	@Override
-	public void onTerminate() {
-		if ( db != null ) {
-			db.clear();
-		}
-		
-		super.onTerminate();
-	}
+        return db;
+    }
+
+    public static RecentFileHistory getFileHistory() {
+        return fileHistory;
+    }
+
+    public static void setDB(Database d) {
+        db = d;
+    }
+
+    public static boolean isShutdown() {
+        return shutdown;
+    }
+
+    public static void setShutdown() {
+        shutdown = true;
+    }
+
+    public static void clearShutdown() {
+        shutdown = false;
+    }
+
+    public static Calendar getCalendar() {
+        if (calendar == null) {
+            calendar = Calendar.getInstance();
+        }
+
+        return calendar;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        fileHistory = new RecentFileHistory(this);
+
+        PRNGFixes.apply();
+    }
+
+    @Override
+    public void onTerminate() {
+        if (db != null) {
+            db.clear();
+        }
+
+        super.onTerminate();
+    }
 }

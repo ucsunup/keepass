@@ -27,40 +27,40 @@ import android.content.Context;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class BackupManagerCompat {
-	private static Class classBackupManager;
-	private static Constructor constructorBackupManager;
-	private static Method dataChanged;
-	
-	private Object backupManager;
-	
-	static {
-		try {
-			classBackupManager = Class.forName("android.app.backup.BackupManager");
-			constructorBackupManager = classBackupManager.getConstructor(Context.class);
-			dataChanged = classBackupManager.getMethod("dataChanged", (Class[]) null);
-		} catch (Exception e) {
-			// Do nothing, class does not exist
-		}
-	}
-	
-	public BackupManagerCompat(Context ctx) {
-		if (constructorBackupManager != null) {
-			try {
-				backupManager = constructorBackupManager.newInstance(ctx);
-			} catch (Exception e) {
-				// Do nothing
-			}
-		}
-	}
-	
-	public void dataChanged() {
-		if (backupManager != null && dataChanged != null) {
-			try {
-				dataChanged.invoke(backupManager, (Object[]) null);
-			} catch (Exception e) {
-				// Do nothing
-			}
-		}
-	}
+    private static Class classBackupManager;
+    private static Constructor constructorBackupManager;
+    private static Method dataChanged;
+
+    private Object backupManager;
+
+    static {
+        try {
+            classBackupManager = Class.forName("android.app.backup.BackupManager");
+            constructorBackupManager = classBackupManager.getConstructor(Context.class);
+            dataChanged = classBackupManager.getMethod("dataChanged", (Class[]) null);
+        } catch (Exception e) {
+            // Do nothing, class does not exist
+        }
+    }
+
+    public BackupManagerCompat(Context ctx) {
+        if (constructorBackupManager != null) {
+            try {
+                backupManager = constructorBackupManager.newInstance(ctx);
+            } catch (Exception e) {
+                // Do nothing
+            }
+        }
+    }
+
+    public void dataChanged() {
+        if (backupManager != null && dataChanged != null) {
+            try {
+                dataChanged.invoke(backupManager, (Object[]) null);
+            } catch (Exception e) {
+                // Do nothing
+            }
+        }
+    }
 
 }

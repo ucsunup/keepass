@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2010 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -18,44 +17,67 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
->
-	<TextView android:id="@+id/label_warning"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:textSize="20sp"
-	  android:visibility="invisible" />
-	<TextView android:id="@+id/label_open_by_filename" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  style="?android:attr/listSeparatorTextViewStyle"
-	  android:text="@string/enter_filename"/>
-	<ImageButton android:id="@+id/browse_button"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:src="@drawable/ic_launcher_folder_small"	
-	  android:layout_alignParentRight="true"
-	  android:layout_below="@id/label_open_by_filename"
-	/>
-  	<EditText android:id="@+id/file_filename"
-  	  android:layout_width="fill_parent"
-  	  android:layout_height="wrap_content"
-  	  android:singleLine="true"
-  	  android:layout_below="@id/label_open_by_filename"
-  	  android:layout_toLeftOf="@id/browse_button"
-  	/>
-  	<Button android:id="@+id/open"
-  	  android:text="@string/menu_open"
-  	  android:layout_height="wrap_content"
-  	  android:layout_width="wrap_content"
-  	  android:layout_below="@id/file_filename"
-  	  android:width="100sp"/>
-  	<Button android:id="@+id/create"
-  	  android:text="@string/menu_create"
-  	  android:layout_height="wrap_content"
-  	  android:layout_width="wrap_content"
-  	  android:layout_below="@id/file_filename"
-  	  android:layout_toRightOf="@id/open"
-  	  android:width="100sp"/>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/label_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/label_open_by_filename"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_filename" />
+
+    <LinearLayout
+        android:id="@+id/file_select_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_open_by_filename"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/file_filename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/browse_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_launcher_folder_small" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/file_select_container"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:width="100sp"
+            android:text="@string/menu_open" />
+
+        <Button
+            android:id="@+id/create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:width="100sp"
+            android:text="@string/menu_create" />
+    </LinearLayout>
+
 </RelativeLayout>

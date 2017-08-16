@@ -5,15 +5,14 @@ android {
     buildToolsVersion = "25.0.0"
 
     defaultConfig {
-        applicationId = "com.android.keepass"
-        minSdkVersion = 3
-        targetSdkVersion = 12
-        versionCode = 154
-        versionName = "2.0.6.4"
+        applicationId "com.android.keepass"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 160
+        versionName "1.0.0.0"
 
         testApplicationId = "com.keepassdroid.tests"
         testInstrumentationRunner = "android.test.InstrumentationTestRunner"
-
 
         /*
         buildConfigFields.with {
