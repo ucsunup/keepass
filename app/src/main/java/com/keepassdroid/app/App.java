@@ -31,7 +31,7 @@ public class App extends Application {
     private static Database db = null;
     private static boolean shutdown = false;
     private static Calendar calendar = null;
-    private static RecentFileHistory fileHistory = null;
+    private static RecentFileHistory mFileHistory = null;
 
     public static Database getDB() {
         if (db == null) {
@@ -42,7 +42,7 @@ public class App extends Application {
     }
 
     public static RecentFileHistory getFileHistory() {
-        return fileHistory;
+        return mFileHistory;
     }
 
     public static void setDB(Database d) {
@@ -73,7 +73,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        fileHistory = new RecentFileHistory(this);
+        mFileHistory = new RecentFileHistory(this);
 
         PRNGFixes.apply();
     }

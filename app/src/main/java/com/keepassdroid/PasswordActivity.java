@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -71,6 +72,7 @@ import java.io.FileNotFoundException;
 public class PasswordActivity extends LockingActivity {
 
     public static final String KEY_DEFAULT_FILENAME = "defaultFileName";
+    public static final String DEFAULT_FILENAME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/keepass/keepass.kdbx";
     private static final String KEY_FILENAME = "fileName";
     private static final String KEY_KEYFILE = "keyFile";
     private static final String KEY_PASSWORD = "password";

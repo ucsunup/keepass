@@ -30,66 +30,66 @@ import com.keepassdroid.compat.EditorCompat;
 import com.keepassdroid.timers.Timeout;
 
 public class TimeoutHelper {
-	
-	private static final long DEFAULT_TIMEOUT = 5 * 60 * 1000;  // 5 minutes
-	
-	public static void pause(Activity act) {
-		// Record timeout time in case timeout service is killed
-		long time = System.currentTimeMillis();
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act);
-		SharedPreferences.Editor edit = prefs.edit();
-		edit.putLong(act.getString(R.string.timeout_key), time);
-		
-		EditorCompat.apply(edit);
-		
-		if ( App.getDB().Loaded() ) {
-	        Timeout.start(act);
-		}
 
-	}
-	
-	public static void resume(Activity act) {
-		if ( App.getDB().Loaded() ) {
-	        Timeout.cancel(act);
-		}
+    private static final long DEFAULT_TIMEOUT = 5 * 60 * 1000;  // 5 minutes
 
-		
-		// Check whether the timeout has expired
-		long cur_time = System.currentTimeMillis();
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act);
-		long timeout_start = prefs.getLong(act.getString(R.string.timeout_key), -1);
-		// The timeout never started
-		if (timeout_start == -1) {
-			return;
-		}
-		
-		
-		String sTimeout = prefs.getString(act.getString(R.string.app_timeout_key), act.getString(R.string.clipboard_timeout_default));
-		long timeout;
-		try {
-			timeout = Long.parseLong(sTimeout);
-		} catch (NumberFormatException e) {
-			timeout = DEFAULT_TIMEOUT;
-		}
-		
-		// We are set to never timeout
-		if (timeout == -1) {
-			return;
-		}
-		
-		long diff = cur_time - timeout_start;
-		if (diff >= timeout) {
-			// We have timed out
-			App.setShutdown();
-		}
-	}
+    public static void pause(Activity act) {
+        // Record timeout time in case timeout service is killed
+        long time = System.currentTimeMillis();
 
-	public static void checkShutdown(Activity act) {
-		if ( App.isShutdown() && App.getDB().Loaded() ) {
-			act.setResult(KeePass.EXIT_LOCK);
-			act.finish();
-		}
-	}
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putLong(act.getString(R.string.timeout_key), time);
+
+        EditorCompat.apply(edit);
+
+        if (App.getDB().Loaded()) {
+            Timeout.start(act);
+        }
+
+    }
+
+    public static void resume(Activity act) {
+        if (App.getDB().Loaded()) {
+            Timeout.cancel(act);
+        }
+
+
+        // Check whether the timeout has expired
+        long cur_time = System.currentTimeMillis();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act);
+        long timeout_start = prefs.getLong(act.getString(R.string.timeout_key), -1);
+        // The timeout never started
+        if (timeout_start == -1) {
+            return;
+        }
+
+
+        String sTimeout = prefs.getString(act.getString(R.string.app_timeout_key), act.getString(R.string.clipboard_timeout_default));
+        long timeout;
+        try {
+            timeout = Long.parseLong(sTimeout);
+        } catch (NumberFormatException e) {
+            timeout = DEFAULT_TIMEOUT;
+        }
+
+        // We are set to never timeout
+        if (timeout == -1) {
+            return;
+        }
+
+        long diff = cur_time - timeout_start;
+        if (diff >= timeout) {
+            // We have timed out
+            App.setShutdown();
+        }
+    }
+
+    public static void checkShutdown(Activity act) {
+        if (App.isShutdown() && App.getDB().Loaded()) {
+            act.setResult(KeePass.EXIT_LOCK);
+            act.finish();
+        }
+    }
 }
