@@ -29,34 +29,32 @@ import com.keepassdroid.database.PwGroupV3;
 
 public class EntryEditActivityV3 extends EntryEditActivity {
 
-	@Override
-	protected PwEntry populateNewEntry(PwEntry entry) {
-		PwEntry newEntry = super.populateNewEntry(entry);
-		
-		if (mSelectedIconID == -1) {
-			if (mIsNew) {
-				newEntry.icon = App.getDB().pm.iconFactory.getIcon(0);
-			}
-			else {
-				// Keep previous icon, if no new one was selected
-				newEntry.icon = mEntry.icon;
-			}
-		}
-		else {
-			newEntry.icon = App.getDB().pm.iconFactory.getIcon(mSelectedIconID);
-		}
-		
-		return newEntry;
-	}
+    @Override
+    protected PwEntry populateNewEntry(PwEntry entry) {
+        PwEntry newEntry = super.populateNewEntry(entry);
 
-	protected static void putParentId(Intent i, String parentKey, PwGroupV3 parent) {
-		i.putExtra(parentKey, parent.groupId);
-	}
+        if (mSelectedIconID == -1) {
+            if (mIsNew) {
+                newEntry.icon = App.getDB().pm.iconFactory.getIcon(0);
+            } else {
+                // Keep previous icon, if no new one was selected
+                newEntry.icon = mEntry.icon;
+            }
+        } else {
+            newEntry.icon = App.getDB().pm.iconFactory.getIcon(mSelectedIconID);
+        }
 
-	@Override
-	protected PwGroupId getParentGroupId(Intent i, String key) {
-		int groupId = i.getIntExtra(key, -1);
-		
-		return new PwGroupIdV3(groupId);
-	}
+        return newEntry;
+    }
+
+    protected static void putParentId(Intent i, String parentKey, PwGroupV3 parent) {
+        i.putExtra(parentKey, parent.groupId);
+    }
+
+    @Override
+    protected PwGroupId getParentGroupId(Intent i, String key) {
+        int groupId = i.getIntExtra(key, -1);
+
+        return new PwGroupIdV3(groupId);
+    }
 }

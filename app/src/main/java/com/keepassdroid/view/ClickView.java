@@ -28,17 +28,17 @@ import android.widget.LinearLayout;
 import com.keepassdroid.app.App;
 
 public abstract class ClickView extends LinearLayout {
-	protected boolean readOnly = false;
-	
-	public ClickView(Context context) {
-		super(context);
+    protected boolean readOnly = false;
 
-		readOnly = App.getDB().readOnly;
-	}
-	
-	abstract public void onClick();
-	
-	abstract public void onCreateMenu(ContextMenu menu, ContextMenuInfo menuInfo);
-	
-	abstract public boolean onContextItemSelected(MenuItem item);
+    public ClickView(Context context) {
+        super(context);
+
+        readOnly = App.getDB().readOnly;
+    }
+
+    abstract public void onClick();
+
+    abstract public void onCreateMenu(ContextMenu menu, ContextMenuInfo menuInfo);
+
+    abstract public boolean onContextItemSelected(MenuItem item);
 }

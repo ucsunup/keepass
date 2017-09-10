@@ -20,12 +20,13 @@
 package com.keepassdroid;
 
 
-import android.content.ActivityNotFoundException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.keepass.KeePass;
 import com.android.keepass.R;
@@ -44,11 +44,15 @@ import com.keepassdroid.app.App;
 import com.keepassdroid.compat.ActivityCompat;
 import com.keepassdroid.compat.EditorCompat;
 import com.keepassdroid.database.PwGroup;
+import com.keepassdroid.database.PwGroupId;
 import com.keepassdroid.database.edit.OnFinish;
 import com.keepassdroid.settings.AppSettingsActivity;
-import com.keepassdroid.utils.Util;
 import com.keepassdroid.view.ClickView;
 import com.keepassdroid.view.GroupViewOnlyView;
+import com.keepassdroid.view.PwEntryView;
+import com.keepassdroid.view.PwGroupView;
+
+import java.util.LinkedList;
 
 public abstract class GroupBaseActivity extends LockCloseListActivity {
     protected ListView mList;
@@ -59,6 +63,7 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 
     private SharedPreferences prefs;
 
+    protected LinkedList<PwGroup> mGroupHistory = new LinkedList<>();
     protected PwGroup mGroup;
 
     @Override
@@ -78,9 +83,15 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 
     protected void onListItemClick(ListView l, View v, int position, long id) {
         ClickView cv = (ClickView) mAdapter.getView(position, null, null);
-        cv.onClick();
+        if (cv instanceof PwGroupView) {
+            onClickGroup(((PwGroupView) cv).getPwGroup());
+        } else {
+            cv.onClick();
+        }
 
     }
+
+    protected abstract void onClickGroup(PwGroup pwGroup);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,19 +123,14 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
 
     protected void setGroupTitle() {
         if (mGroup != null) {
-            String name = mGroup.getName();
-            if (name != null && name.length() > 0) {
-                TextView tv = (TextView) findViewById(R.id.group_name);
-                if (tv != null) {
-                    tv.setText(name);
-                }
-            } else {
-                TextView tv = (TextView) findViewById(R.id.group_name);
-                if (tv != null) {
-                    tv.setText(getText(R.string.root));
-                }
-
+            StringBuilder nameBuilder = new StringBuilder("");
+            for (PwGroup group : mGroupHistory) {
+                nameBuilder.append(group.getName()).append("/");
             }
+            ;
+            nameBuilder.append(mGroup.getName());
+            TextView tv = (TextView) findViewById(R.id.group_name);
+            tv.setText(nameBuilder != null ? nameBuilder.toString() : getText(R.string.root));
         }
     }
 
@@ -210,7 +216,7 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
                 return true;
 
             case R.id.menu_app_settings:
-                AppSettingsActivity.Launch(this);
+                AppSettingsActivity.Launch(this, true);
                 return true;
 
             case R.id.menu_change_master_key:

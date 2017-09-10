@@ -19,23 +19,23 @@
  */
 package com.keepassdroid;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.keepassdroid.timeout.TimeoutHelper;
 
-public abstract class LockingActivity extends Activity {
+public abstract class LockingActivity extends AppCompatActivity {
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		TimeoutHelper.pause(this);
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+        TimeoutHelper.pause(this);
+    }
 
-		TimeoutHelper.resume(this);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        TimeoutHelper.resume(this);
+    }
 }

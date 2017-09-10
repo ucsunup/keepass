@@ -27,46 +27,46 @@ import com.keepassdroid.Database;
 import com.keepassdroid.database.exception.PwDbOutputException;
 
 public class SaveDB extends RunnableOnFinish {
-	private Database mDb;
-	private boolean mDontSave;
-	private Context mCtx;
+    private Database mDb;
+    private boolean mDontSave;
+    private Context mCtx;
 
-	public SaveDB(Context ctx, Database db, OnFinish finish, boolean dontSave) {
-		super(finish);
-		
-		mDb = db;
-		mDontSave = dontSave;
-		mCtx = ctx;
-	}
+    public SaveDB(Context ctx, Database db, OnFinish finish, boolean dontSave) {
+        super(finish);
 
-	public SaveDB(Context ctx, Database db, OnFinish finish) {
-		super(finish);
-		
-		mDb = db;
-		mDontSave = false;
-		mCtx = ctx;
-	}
+        mDb = db;
+        mDontSave = dontSave;
+        mCtx = ctx;
+    }
 
-	@Override
-	public void run() {
+    public SaveDB(Context ctx, Database db, OnFinish finish) {
+        super(finish);
 
-		if ( ! mDontSave ) {
-			try {
-				mDb.SaveData(mCtx);
-			} catch (IOException e) {
-				finish(false, e.getMessage());
-				return;
-			} catch (PwDbOutputException e) {
-				// TODO: Restore
-				throw new RuntimeException(e);
-				/*
+        mDb = db;
+        mDontSave = false;
+        mCtx = ctx;
+    }
+
+    @Override
+    public void run() {
+
+        if (!mDontSave) {
+            try {
+                mDb.SaveData(mCtx);
+            } catch (IOException e) {
+                finish(false, e.getMessage());
+                return;
+            } catch (PwDbOutputException e) {
+                // TODO: Restore
+                throw new RuntimeException(e);
+                /*
 				finish(false, e.getMessage());
 				return;
 				*/
-			}
-		}
+            }
+        }
 
-		finish(true);
-	}
+        finish(true);
+    }
 
 }

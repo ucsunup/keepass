@@ -121,6 +121,7 @@
     <string name="menu_app_settings">设置</string>
     <string name="menu_db_settings">数据库设置</string>
     <string name="menu_delete">删除</string>
+    <string name="menu_db_advanced_setting">数据库高级设置</string>
     <string name="menu_donate">捐赠</string>
     <string name="menu_edit">编辑</string>
     <string name="menu_hide_password">隐藏密码</string>
@@ -128,6 +129,7 @@
     <string name="menu_lock">锁定数据库</string>
     <string name="menu_open">打开</string>
     <string name="menu_rename">重命名</string>
+    <string name="menu_showpass">显示密码</string>
     <string name="menu_search">搜索</string>
     <string name="menu_url">到网址</string>
     <string name="minus">减</string>

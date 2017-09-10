@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009-2015 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -17,124 +16,140 @@
   You should have received a copy of the GNU General Public License
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-  android:id="@+id/entry_table"
-  android:layout_height="wrap_content"
-  android:layout_width="fill_parent"
-  android:orientation="vertical">	
-	<!-- Username -->
-	<TextView android:id="@+id/entry_user_name_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:text="@string/entry_user_name"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_user_name" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:textIsSelectable="true"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!--  URL -->
-	<TextView android:id="@+id/entry_url_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:text="@string/entry_url" 
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_url" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:autoLink="all"
-	  android:textIsSelectable="true"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!-- Password -->
-	<TextView android:id="@+id/entry_password_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_password"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<com.keepassdroid.view.PasswordTextViewSelect android:id="@+id/entry_password" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:inputType="textPassword"
-	  android:textIsSelectable="true"
-	  android:typeface="monospace"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!-- Comment -->
-	<TextView android:id="@+id/entry_comment_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_comment"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_comment" 
-      android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:textIsSelectable="true"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<LinearLayout android:id="@+id/extra_strings"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:orientation="vertical">
-	</LinearLayout>
-	<!-- Created -->
-	<TextView android:id="@+id/entry_created_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_created"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_created" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!-- Modified -->
-	<TextView android:id="@+id/entry_modified_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_modified"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_modified" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!-- Accessed -->
-	<TextView android:id="@+id/entry_accessed_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_accessed"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_accessed" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  style="@style/EntryItem"
-	/>
-	<View style="@style/Divider" />
-	<!-- Expires -->
-	<TextView android:id="@+id/entry_expires_label"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content" 
-	  android:text="@string/entry_expires"
-	  style="@style/WhiteOnDarkSmall"
-	/>
-	<TextView android:id="@+id/entry_expires" 
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  style="@style/EntryItem"
-	/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/entry_table"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- Username -->
+    <TextView
+        android:id="@+id/entry_user_name_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_user_name" />
+
+    <TextView
+        android:id="@+id/entry_user_name"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true" />
+
+    <View style="@style/Divider" />
+    <!--  URL -->
+    <TextView
+        android:id="@+id/entry_url_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_url" />
+
+    <TextView
+        android:id="@+id/entry_url"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:textIsSelectable="true" />
+
+    <View style="@style/Divider" />
+    <!-- Password -->
+    <TextView
+        android:id="@+id/entry_password_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_password" />
+
+    <com.keepassdroid.view.PasswordTextViewSelect
+        android:id="@+id/entry_password"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:textIsSelectable="true"
+        android:typeface="monospace" />
+
+    <View style="@style/Divider" />
+    <!-- Comment -->
+    <TextView
+        android:id="@+id/entry_comment_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_comment" />
+
+    <TextView
+        android:id="@+id/entry_comment"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true" />
+
+    <View style="@style/Divider" />
+
+    <LinearLayout
+        android:id="@+id/extra_strings"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+    <!-- Created -->
+    <TextView
+        android:id="@+id/entry_created_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_created" />
+
+    <TextView
+        android:id="@+id/entry_created"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <View style="@style/Divider" />
+    <!-- Modified -->
+    <TextView
+        android:id="@+id/entry_modified_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_modified" />
+
+    <TextView
+        android:id="@+id/entry_modified"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <View style="@style/Divider" />
+    <!-- Accessed -->
+    <TextView
+        android:id="@+id/entry_accessed_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_accessed" />
+
+    <TextView
+        android:id="@+id/entry_accessed"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <View style="@style/Divider" />
+    <!-- Expires -->
+    <TextView
+        android:id="@+id/entry_expires_label"
+        style="@style/WhiteOnDarkSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/entry_expires" />
+
+    <TextView
+        android:id="@+id/entry_expires"
+        style="@style/EntryItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

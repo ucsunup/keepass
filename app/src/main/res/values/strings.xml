@@ -135,6 +135,7 @@
     <string name="menu_app_settings">Settings</string>
     <string name="menu_db_settings">Database settings</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_db_advanced_setting">Database advanced setting</string>
     <string name="menu_donate">Donate</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_hide_password">Hide Pass</string>
@@ -203,4 +204,7 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

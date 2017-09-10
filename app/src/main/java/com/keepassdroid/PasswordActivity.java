@@ -19,17 +19,15 @@
  */
 package com.keepassdroid;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -225,8 +223,8 @@ public class PasswordActivity extends LockingActivity {
     }
     */
 
-    private void errorMessage(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
+    private static void errorMessage(Context context, int resId) {
+        Toast.makeText(context, resId, Toast.LENGTH_LONG).show();
     }
 
     private class DefaultCheckChange implements CompoundButton.OnCheckedChangeListener {
@@ -259,17 +257,17 @@ public class PasswordActivity extends LockingActivity {
         public void onClick(View view) {
             String pass = getEditText(R.id.password);
             String key = getEditText(R.id.pass_keyfile);
-            loadDatabase(pass, key);
+            loadDatabase(PasswordActivity.this, mDbUri, pass, key);
         }
     }
 
-    private void loadDatabase(String pass, String keyfile) {
-        loadDatabase(pass, UriUtil.parseDefaultFile(keyfile));
+    public static void loadDatabase(Context context, Uri dbUri, String pass, String keyfile) {
+        loadDatabase(context, dbUri, pass, UriUtil.parseDefaultFile(keyfile));
     }
 
-    private void loadDatabase(String pass, Uri keyfile) {
+    public static void loadDatabase(Context context, Uri dbUri, String pass, Uri keyfile) {
         if (pass.length() == 0 && (keyfile == null || keyfile.toString().length() == 0)) {
-            errorMessage(R.string.error_nopass);
+            errorMessage(context, R.string.error_nopass);
             return;
         }
 
@@ -281,8 +279,8 @@ public class PasswordActivity extends LockingActivity {
         App.clearShutdown();
 
         Handler handler = new Handler();
-        LoadDB task = new LoadDB(db, PasswordActivity.this, mDbUri, pass, keyfile, new AfterLoad(handler, db));
-        ProgressTask pt = new ProgressTask(PasswordActivity.this, task, R.string.loading_database);
+        LoadDB task = new LoadDB(db, context, dbUri, pass, keyfile, new AfterLoad((Activity) context, handler, db));
+        ProgressTask pt = new ProgressTask(context, task, R.string.loading_database);
         pt.run();
     }
 
@@ -311,19 +309,21 @@ public class PasswordActivity extends LockingActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_app_settings:
-                AppSettingsActivity.Launch(this);
+                AppSettingsActivity.Launch(this, false);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private final class AfterLoad extends OnFinish {
+    private static final class AfterLoad extends OnFinish {
         private Database db;
+        private Activity mActivity;
 
-        public AfterLoad(Handler handler, Database db) {
+        public AfterLoad(Activity activity, Handler handler, Database db) {
             super(handler);
 
+            this.mActivity = activity;
             this.db = db;
         }
 
@@ -331,18 +331,18 @@ public class PasswordActivity extends LockingActivity {
         public void run() {
             if (db.passwordEncodingError) {
                 PasswordEncodingDialogHelper dialog = new PasswordEncodingDialogHelper();
-                dialog.show(PasswordActivity.this, new OnClickListener() {
+                dialog.show(mActivity, new OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        GroupActivity.Launch(PasswordActivity.this);
+                        GroupActivity.Launch(mActivity);
                     }
 
                 });
             } else if (mSuccess) {
-                GroupActivity.Launch(PasswordActivity.this);
+                GroupActivity.Launch(mActivity);
             } else {
-                displayMessage(PasswordActivity.this);
+                displayMessage(mActivity);
             }
         }
     }
@@ -355,7 +355,6 @@ public class PasswordActivity extends LockingActivity {
         protected Integer doInBackground(Intent... args) {
             Intent i = args[0];
             String action = i.getAction();
-            ;
             if (action != null && action.equals(VIEW_INTENT)) {
                 Uri incoming = i.getData();
                 mDbUri = incoming;
@@ -499,7 +498,7 @@ public class PasswordActivity extends LockingActivity {
             retrieveSettings();
 
             if (launch_immediately)
-                loadDatabase(password, mKeyUri);
+                loadDatabase(PasswordActivity.this, mDbUri, password, mKeyUri);
         }
     }
 }

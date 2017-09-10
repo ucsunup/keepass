@@ -26,39 +26,31 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.android.keepass.R;
+import com.github.clans.fab.FloatingActionMenu;
 
 public class GroupViewOnlyView extends RelativeLayout {
 
-	public GroupViewOnlyView(Context context) {
-		this(context, null);
-	}
-	
-	public GroupViewOnlyView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		inflate(context);
-	}
-	
-	private void inflate(Context context) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.group_add_entry, this);
+    public GroupViewOnlyView(Context context) {
+        this(context, null);
+    }
 
-		// Hide the buttons
-		View addGroup = findViewById(R.id.add_group);
-		addGroup.setVisibility(INVISIBLE);
-		
-		View addEntry = findViewById(R.id.add_entry);
-		addEntry.setVisibility(INVISIBLE);
-		
-		View divider2 = findViewById(R.id.divider2);
-		divider2.setVisibility(INVISIBLE);
-		
-		View list = findViewById(R.id.group_list);
-		LayoutParams lp = (RelativeLayout.LayoutParams) list.getLayoutParams();
-		lp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-		
-		
-	}
+    public GroupViewOnlyView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
+        inflate(context);
+    }
 
+    private void inflate(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.group_add_entry, this);
+
+        // Hide the buttons
+        FloatingActionMenu menu_group = (FloatingActionMenu) findViewById(R.id.menu_group);
+        menu_group.removeAllMenuButtons();
+        menu_group.hideMenu(true);
+
+        View list = findViewById(R.id.group_list);
+        LayoutParams lp = (RelativeLayout.LayoutParams) list.getLayoutParams();
+        lp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
+    }
 }

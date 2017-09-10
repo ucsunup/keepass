@@ -1,6 +1,6 @@
 /*
  * Copyright 2009-2013 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -22,11 +22,10 @@ package com.keepassdroid.settings;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.android.keepass.R;
@@ -39,12 +38,15 @@ import com.keepassdroid.database.PwEncryptionAlgorithm;
 import com.keepassdroid.utils.Util;
 
 public class AppSettingsActivity extends LockingClosePreferenceActivity {
+    public static final String KEY_LOGIN_STATE = "login_state";
     public static boolean KEYFILE_DEFAULT = false;
+    public boolean mLogin;
 
     private BackupManagerCompat backupManager;
 
-    public static void Launch(Context ctx) {
+    public static void Launch(Context ctx, boolean login) {
         Intent i = new Intent(ctx, AppSettingsActivity.class);
+        i.putExtra(KEY_LOGIN_STATE, login);
 
         ctx.startActivity(i);
     }
@@ -53,59 +55,70 @@ public class AppSettingsActivity extends LockingClosePreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // init current login state
+        mLogin = getIntent().getBooleanExtra(KEY_LOGIN_STATE, false);
+
         addPreferencesFromResource(R.xml.preferences);
+        initPreference();
+        backupManager = new BackupManagerCompat(this);
 
-        Preference keyFile = findPreference(getString(R.string.keyfile_key));
-        keyFile.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+    }
 
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Boolean value = (Boolean) newValue;
+    @Override
+    protected void onStop() {
+        backupManager.dataChanged();
 
-                if (!value.booleanValue()) {
-                    App.getFileHistory().deleteAllKeys();
-                }
+        super.onStop();
+    }
 
-                return true;
-            }
-        });
-
-        Preference recentHistory = findPreference(getString(R.string.recentfile_key));
-        recentHistory.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Boolean value = (Boolean) newValue;
-
-                if (value == null) {
-                    value = true;
-                }
-
-                if (!value) {
-                    App.getFileHistory().deleteAll();
-                }
-
-                return true;
-            }
-        });
-
-        Database db = App.getDB();
-        if (db.Loaded() && db.pm.appSettingsEnabled()) {
-            Preference rounds = findPreference(getString(R.string.rounds_key));
-            rounds.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
+    private void initPreference() {
+        if (mLogin) {
+            Preference keyFile = findPreference(getString(R.string.keyfile_key));
+            keyFile.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    setRounds(App.getDB(), preference);
+                    Boolean value = (Boolean) newValue;
+                    if (!value.booleanValue()) {
+                        App.getFileHistory().deleteAllKeys();
+                    }
                     return true;
                 }
             });
 
-            setRounds(db, rounds);
+            Preference recentHistory = findPreference(getString(R.string.recentfile_key));
+            recentHistory.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Boolean value = (Boolean) newValue;
+                    if (value == null) {
+                        value = true;
+                    }
+                    if (!value) {
+                        App.getFileHistory().deleteAll();
+                    }
+                    return true;
+                }
+            });
 
-            Preference algorithm = findPreference(getString(R.string.algorithm_key));
-            setAlgorithm(db, algorithm);
-
+            Database db = App.getDB();
+            if (db.Loaded() && db.pm.appSettingsEnabled()) {
+                Preference rounds = findPreference(getString(R.string.rounds_key));
+                rounds.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        setRounds(App.getDB(), preference);
+                        return true;
+                    }
+                });
+                setRounds(db, rounds);
+                Preference algorithm = findPreference(getString(R.string.algorithm_key));
+                setAlgorithm(db, algorithm);
+            } else {
+                Preference dbSettings = findPreference(getString(R.string.db_key));
+                dbSettings.setEnabled(false);
+            }
         } else {
-            Preference dbSettings = findPreference(getString(R.string.db_key));
-            dbSettings.setEnabled(false);
+            PreferenceScreen databaseSetting = (PreferenceScreen) findPreference(getString(R.string.db_key));
+            getPreferenceScreen().removePreference(databaseSetting);
+            PreferenceScreen appSetting = (PreferenceScreen) findPreference(getString(R.string.app_key));
+            getPreferenceScreen().removePreference(appSetting);
         }
 
         Preference donatePreference = findPreference(getString(R.string.menu_donate));
@@ -131,16 +144,6 @@ public class AppSettingsActivity extends LockingClosePreferenceActivity {
                 return false;
             }
         });
-
-        backupManager = new BackupManagerCompat(this);
-
-    }
-
-    @Override
-    protected void onStop() {
-        backupManager.dataChanged();
-
-        super.onStop();
     }
 
     private void setRounds(Database db, Preference rounds) {

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion = 22
+    compileSdkVersion = 24
     buildToolsVersion = "25.0.0"
 
     defaultConfig {
@@ -53,4 +53,10 @@ dependencies {
     compile 'com.madgag.spongycastle:core:1.54.0.0'
     compile 'com.madgag.spongycastle:prov:1.54.0.0'
     compile 'joda-time:joda-time:2.9.4'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+
+    // Third library
+    compile 'com.github.clans:fab:1.6.4'
 }

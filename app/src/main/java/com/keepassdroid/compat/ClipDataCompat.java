@@ -40,16 +40,16 @@ public class ClipDataCompat {
     static {
         try {
             clipData = Class.forName("android.content.ClipData");
-            getDescription = clipData.getMethod("getDescription", (Class[])null);
-            getItemCount = clipData.getMethod("getItemCount", (Class[])null);
+            getDescription = clipData.getMethod("getDescription", (Class[]) null);
+            getItemCount = clipData.getMethod("getItemCount", (Class[]) null);
             getItemAt = clipData.getMethod("getItemAt", new Class[]{int.class});
             clipDescription = Class.forName("android.content.ClipDescription");
-            getLabel = clipDescription.getMethod("getLabel", (Class[])null);
+            getLabel = clipDescription.getMethod("getLabel", (Class[]) null);
 
             clipDataItem = Class.forName("android.content.ClipData$Item");
-            getUri = clipDataItem.getMethod("getUri", (Class[])null);
+            getUri = clipDataItem.getMethod("getUri", (Class[]) null);
 
-            getClipDataFromIntent = Intent.class.getMethod("getClipData", (Class[])null);
+            getClipDataFromIntent = Intent.class.getMethod("getClipData", (Class[]) null);
 
             initSucceded = true;
         } catch (Exception e) {
@@ -61,17 +61,17 @@ public class ClipDataCompat {
         boolean clipDataSucceeded = false;
         if (initSucceded) {
             try {
-                Object clip = getClipDataFromIntent.invoke(i, null);
+                Object clip = getClipDataFromIntent.invoke(i);
 
                 if (clip != null) {
-                    Object clipDescription = getDescription.invoke(clip, null);
-                    CharSequence label = (CharSequence)getLabel.invoke(clipDescription, null);
+                    Object clipDescription = getDescription.invoke(clip);
+                    CharSequence label = (CharSequence) getLabel.invoke(clipDescription);
                     if (label.equals(key)) {
-                        int itemCount = (int) getItemCount.invoke(clip, null);
+                        int itemCount = (int) getItemCount.invoke(clip);
                         if (itemCount == 1) {
-                            Object clipItem = getItemAt.invoke(clip,0);
+                            Object clipItem = getItemAt.invoke(clip, 0);
                             if (clipItem != null) {
-                                return (Uri)getUri.invoke(clipItem, null);
+                                return (Uri) getUri.invoke(clipItem);
                             }
                         }
                     }

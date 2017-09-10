@@ -17,6 +17,7 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_margin="10dp">
@@ -26,43 +27,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/edit_btn_containers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/add_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_group" />
-
-        <Button
-            android:id="@+id/add_entry"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_entry" />
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/divider2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/edit_btn_containers"
-        android:scaleType="fitXY"
-        android:src="@android:drawable/divider_horizontal_dark"
-        android:tint="@color/blue_highlight" />
-
     <ListView
         android:id="@+id/group_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/divider2"
         android:layout_below="@id/group_header" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:fab_colorNormal="@android:color/darker_gray"
+        app:fab_colorPressed="@android:color/black"
+        app:fab_colorRipple="@android:color/holo_purple"
+        app:menu_fab_size="normal"
+        app:menu_icon="@android:drawable/ic_menu_edit"
+        app:menu_showShadow="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_submenu_add_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_edit"
+            app:fab_colorNormal="@android:color/darker_gray"
+            app:fab_colorPressed="@android:color/black"
+            app:fab_colorRipple="@android:color/holo_purple"
+            app:fab_label="@string/add_group"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_submenu_add_entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_edit"
+            app:fab_colorNormal="@android:color/darker_gray"
+            app:fab_colorPressed="@android:color/black"
+            app:fab_colorRipple="@android:color/holo_purple"
+            app:fab_label="@string/add_entry"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

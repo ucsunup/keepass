@@ -36,83 +36,69 @@ import android.widget.TextView;
 import com.android.keepass.R;
 import com.keepassdroid.icons.Icons;
 
-public class IconPickerActivity extends LockCloseActivity
-{
-	public static final String KEY_ICON_ID = "icon_id";
+public class IconPickerActivity extends LockCloseActivity {
+    public static final String KEY_ICON_ID = "icon_id";
 
-	public static void Launch(Activity act)
-	{
-		Intent i = new Intent(act, IconPickerActivity.class);
-		act.startActivityForResult(i, 0);
-	}
+    public static void Launch(Activity act) {
+        Intent i = new Intent(act, IconPickerActivity.class);
+        act.startActivityForResult(i, 0);
+    }
 
-   @Override
-   public void onCreate(Bundle savedInstanceState)
-   {
-   	super.onCreate(savedInstanceState);
-   	setContentView(R.layout.icon_picker);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.icon_picker);
 
-   	GridView currIconGridView = (GridView)findViewById(R.id.IconGridView);
-   	currIconGridView.setAdapter(new ImageAdapter(this));
+        GridView currIconGridView = (GridView) findViewById(R.id.IconGridView);
+        currIconGridView.setAdapter(new ImageAdapter(this));
 
-   	currIconGridView.setOnItemClickListener(new OnItemClickListener()
-   	{
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-			{
-				final Intent intent = new Intent();
-				
-				intent.putExtra(KEY_ICON_ID, position);
-				setResult(EntryEditActivity.RESULT_OK_ICON_PICKER, intent);
-				
-				finish();
-			}
-   	});
-   }
-   
-   public class ImageAdapter extends BaseAdapter
-   {
-   	Context mContext;
+        currIconGridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                final Intent intent = new Intent();
 
-   	public ImageAdapter(Context c)
-   	{
-   		mContext = c;
-   	}
-   	
-   	public int getCount()
-   	{
-   		/* Return number of KeePass icons */
-   		return Icons.count();
-   	}
-   	
-   	public Object getItem(int position)
-		{
-			return null;
-		}
+                intent.putExtra(KEY_ICON_ID, position);
+                setResult(EntryEditActivity.RESULT_OK_ICON_PICKER, intent);
 
-		public long getItemId(int position)
-		{
-			return 0;
-		}
-   	
-   	public View getView(int position, View convertView, ViewGroup parent)
-   	{
-   		View currView;
-   		if(convertView == null)
-   		{
-   			LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-   			currView = li.inflate(R.layout.icon, parent, false);
-   		}
-   		else
-   		{
-   			currView = convertView;
-   		}
-   		
-   		TextView tv = (TextView) currView.findViewById(R.id.icon_text);
-   		tv.setText("" + position);
-   		ImageView iv = (ImageView) currView.findViewById(R.id.icon_image);
-   		iv.setImageResource(Icons.iconToResId(position));
- 
-   		return currView;
-   	}
-   }
+                finish();
+            }
+        });
+    }
+
+    public class ImageAdapter extends BaseAdapter {
+        Context mContext;
+
+        public ImageAdapter(Context c) {
+            mContext = c;
+        }
+
+        public int getCount() {
+           /* Return number of KeePass icons */
+            return Icons.count();
+        }
+
+        public Object getItem(int position) {
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View currView;
+            if (convertView == null) {
+                LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                currView = li.inflate(R.layout.icon, parent, false);
+            } else {
+                currView = convertView;
+            }
+
+            TextView tv = (TextView) currView.findViewById(R.id.icon_text);
+            tv.setText("" + position);
+            ImageView iv = (ImageView) currView.findViewById(R.id.icon_image);
+            iv.setImageResource(Icons.iconToResId(position));
+
+            return currView;
+        }
+    }
 }

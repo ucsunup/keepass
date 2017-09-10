@@ -19,280 +19,85 @@
  */
 package com.keepassdroid.fileselect;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.keepass.R;
-import com.keepassdroid.GroupActivity;
 import com.keepassdroid.PasswordActivity;
-import com.keepassdroid.ProgressTask;
-import com.keepassdroid.SetPasswordDialog;
-import com.keepassdroid.app.App;
 import com.keepassdroid.compat.ContentResolverCompat;
 import com.keepassdroid.compat.StorageAF;
-import com.keepassdroid.database.edit.CreateDB;
-import com.keepassdroid.database.edit.FileOnFinish;
-import com.keepassdroid.database.exception.ContentFileNotFoundException;
-import com.keepassdroid.intents.Intents;
+import com.keepassdroid.fragment.AdvancedFileSelectFragment;
+import com.keepassdroid.fragment.FillUsrPwdFragment;
 import com.keepassdroid.settings.AppSettingsActivity;
-import com.keepassdroid.utils.EmptyUtils;
-import com.keepassdroid.utils.Interaction;
 import com.keepassdroid.utils.UriUtil;
 import com.keepassdroid.utils.Util;
-import com.keepassdroid.view.FileNameView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URLDecoder;
 
-public class FileSelectActivity extends Activity implements View.OnClickListener {
+public class FileSelectActivity extends AppCompatActivity implements View.OnClickListener, FillUsrPwdFragment.OnFragmentInteractionListener,
+        AdvancedFileSelectFragment.OnFragmentInteractionListener {
 
-    private ListView mList;
-    private ListAdapter mAdapter;
-
-    private static final int CMENU_CLEAR = Menu.FIRST;
-
-    public static final int FILE_BROWSE = 1;
-    public static final int GET_CONTENT = 2;
+    public static final int REQUEST_CODE_FILE_BROWSE = 1;
+    public static final int REQUEST_CODE_GET_CONTENT = 2;
     public static final int OPEN_DOC = 3;
 
-    private RecentFileHistory mFileHistory;
+    // fragment tag
+    public static final String TAG_FRAGMENT_FILLUSRPWDFRAGMENT = "fillusrpwdfragment";
+    public static final String TAG_FRAGMENT_ADVANCEDFILESELECTFRAGMENT = "advancedfileselectfragment";
 
-    private boolean mRecentMode = false;
+    private FragmentManager mFragmentManager;
+    private FillUsrPwdFragment mFillUsrPwdFragment;
+    private AdvancedFileSelectFragment mAdvancedFileSelectFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFileHistory = App.getFileHistory();
-
-        if (mFileHistory.hasRecentFiles()) {
-            mRecentMode = true;
-            setContentView(R.layout.file_selection);
-        } else {
-            setContentView(R.layout.file_selection_no_recent);
-        }
-
-        mList = (ListView) findViewById(R.id.file_list);
-
-        mList.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                        onListItemClick((ListView) parent, v, position, id);
-                    }
-                }
-        );
-
-        // Open button
-        Button openButton = (Button) findViewById(R.id.open);
-        openButton.setOnClickListener(this);
-        // Create button
-        Button createButton = (Button) findViewById(R.id.create);
-        createButton.setOnClickListener(this);
-        ImageButton browseButton = (ImageButton) findViewById(R.id.browse_button);
-        browseButton.setOnClickListener(this);
-
-        fillData();
-
-        registerForContextMenu(mList);
+        setContentView(R.layout.file_selection);
 
         // Load default database
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String fileName = prefs.getString(PasswordActivity.KEY_DEFAULT_FILENAME, "");
+        String fileName = prefs.getString(PasswordActivity.KEY_DEFAULT_FILENAME, PasswordActivity.DEFAULT_FILENAME);
 
-        if (fileName.length() > 0) {
-            Uri dbUri = UriUtil.parseDefaultFile(fileName);
-            String scheme = dbUri.getScheme();
-
-            if (!EmptyUtils.isNullOrEmpty(scheme) && scheme.equalsIgnoreCase("file")) {
-                String path = dbUri.getPath();
-                File db = new File(path);
-
-                if (db.exists()) {
-                    try {
-                        PasswordActivity.Launch(FileSelectActivity.this, path);
-                    } catch (Exception e) {
-                        // Ignore exception
-                    }
-                }
-            } else {
-                try {
-                    PasswordActivity.Launch(FileSelectActivity.this, dbUri.toString());
-                } catch (Exception e) {
-                    // Ignore exception
-                }
-            }
+        // Judge if not init databse file
+        boolean needInitDBFile = true;
+        File dbFile = new File(fileName);
+        if (dbFile.exists()) {
+            needInitDBFile = false;
         }
+
+        mFragmentManager = this.getSupportFragmentManager();
+        mFillUsrPwdFragment = FillUsrPwdFragment.newInstance(fileName, null, !needInitDBFile);
+        mFragmentManager.beginTransaction().replace(R.id.content, mFillUsrPwdFragment)
+                .addToBackStack(TAG_FRAGMENT_FILLUSRPWDFRAGMENT).commitAllowingStateLoss();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.open:
-                String fileName = Util.getEditText(FileSelectActivity.this,
-                        R.id.file_filename);
-
-                try {
-                    PasswordActivity.Launch(FileSelectActivity.this, fileName);
-                } catch (ContentFileNotFoundException e) {
-                    Toast.makeText(FileSelectActivity.this,
-                            R.string.file_not_found_content, Toast.LENGTH_LONG).show();
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(FileSelectActivity.this,
-                            R.string.FileNotFound, Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.create:
-                String filename = Util.getEditText(FileSelectActivity.this, R.id.file_filename);
-                createDatabase(FileSelectActivity.this, filename);
-                break;
-            case R.id.browse_button:
-                if (StorageAF.useStorageFramework(FileSelectActivity.this)) {
-                    Intent i = new Intent(StorageAF.ACTION_OPEN_DOCUMENT);
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("*/*");
-                    i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                    startActivityForResult(i, OPEN_DOC);
-                } else {
-                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("*/*");
-
-                    try {
-                        startActivityForResult(i, GET_CONTENT);
-                    } catch (ActivityNotFoundException e) {
-                        lookForOpenIntentsFilePicker();
-                    } catch (SecurityException e) {
-                        lookForOpenIntentsFilePicker();
-                    }
-                }
-                break;
         }
-    }
-
-    private void lookForOpenIntentsFilePicker() {
-
-        if (Interaction.isIntentAvailable(FileSelectActivity.this, Intents.OPEN_INTENTS_FILE_BROWSE)) {
-            Intent i = new Intent(Intents.OPEN_INTENTS_FILE_BROWSE);
-            i.setData(Uri.parse("file://" + Util.getEditText(FileSelectActivity.this, R.id.file_filename)));
-            try {
-                startActivityForResult(i, FILE_BROWSE);
-            } catch (ActivityNotFoundException e) {
-                showBrowserDialog();
-            }
-
-        } else {
-            showBrowserDialog();
-        }
-    }
-
-    private void showBrowserDialog() {
-        BrowserDialog diag = new BrowserDialog(FileSelectActivity.this);
-        diag.show();
-    }
-
-    private class LaunchGroupActivity extends FileOnFinish {
-        private Uri mUri;
-
-        public LaunchGroupActivity(String filename) {
-            super(null);
-            mUri = UriUtil.parseDefaultFile(filename);
-        }
-
-        @Override
-        public void run() {
-            if (mSuccess) {
-                // Add to recent files
-                mFileHistory.createFile(mUri, getFilename());
-                GroupActivity.Launch(FileSelectActivity.this);
-            }
-        }
-    }
-
-    private class CollectPassword extends FileOnFinish {
-
-        public CollectPassword(FileOnFinish finish) {
-            super(finish);
-        }
-
-        @Override
-        public void run() {
-            SetPasswordDialog password = new SetPasswordDialog(FileSelectActivity.this, mOnFinish);
-            password.show();
-        }
-
-    }
-
-    private void fillData() {
-        // Set the initial value of the filename
-        EditText filename = (EditText) findViewById(R.id.file_filename);
-        filename.setText(PasswordActivity.DEFAULT_FILENAME);
-
-        mAdapter = new ArrayAdapter<String>(this, R.layout.file_row, R.id.file_filename, mFileHistory.getDbList());
-        mList.setAdapter(mAdapter);
-    }
-
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-
-        new AsyncTask<Integer, Void, Void>() {
-            String fileName;
-            String keyFile;
-
-            protected Void doInBackground(Integer... args) {
-                int position = args[0];
-                fileName = mFileHistory.getDatabaseAt(position);
-                keyFile = mFileHistory.getKeyfileAt(position);
-                return null;
-            }
-
-            protected void onPostExecute(Void v) {
-                try {
-                    PasswordActivity.Launch(FileSelectActivity.this, fileName, keyFile);
-                } catch (ContentFileNotFoundException e) {
-                    Toast.makeText(FileSelectActivity.this, R.string.file_not_found_content, Toast.LENGTH_LONG)
-                            .show();
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(FileSelectActivity.this, R.string.FileNotFound, Toast.LENGTH_LONG)
-                            .show();
-                }
-            }
-        }.execute(position);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fillData();
-
         String filename = null;
-        if (requestCode == FILE_BROWSE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_FILE_BROWSE && resultCode == RESULT_OK) {
             filename = data.getDataString();
             if (filename != null) {
                 if (filename.startsWith("file://")) {
@@ -302,7 +107,7 @@ public class FileSelectActivity extends Activity implements View.OnClickListener
                 filename = URLDecoder.decode(filename);
             }
 
-        } else if ((requestCode == GET_CONTENT || requestCode == OPEN_DOC) && resultCode == RESULT_OK) {
+        } else if ((requestCode == REQUEST_CODE_GET_CONTENT || requestCode == OPEN_DOC) && resultCode == RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
                 if (uri != null) {
@@ -316,7 +121,7 @@ public class FileSelectActivity extends Activity implements View.OnClickListener
                             // nop
                         }
                     }
-                    if (requestCode == GET_CONTENT) {
+                    if (requestCode == REQUEST_CODE_GET_CONTENT) {
                         uri = UriUtil.translate(this, uri);
                     }
                     filename = uri.toString();
@@ -333,122 +138,76 @@ public class FileSelectActivity extends Activity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Check to see if we need to change modes
-        if (mFileHistory.hasRecentFiles() != mRecentMode) {
-            // Restart the activity
-            Intent intent = getIntent();
-            startActivity(intent);
-            finish();
-        }
-
-        FileNameView fnv = (FileNameView) findViewById(R.id.file_select);
-        fnv.updateExternalStorageWarning();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.fileselect, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_app_settings:
-                AppSettingsActivity.Launch(this);
+            case R.id.menu_donate:
+                try {
+                    Util.gotoUrl(this, R.string.donate_url);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(this, R.string.error_failed_to_launch_link, Toast.LENGTH_LONG).show();
+                    return false;
+                }
                 return true;
+            case R.id.menu_db_advanced_setting:
+                // 数据库的高级设置
+                if (mFragmentManager != null) {
+                    if (mAdvancedFileSelectFragment == null) {
+                        mAdvancedFileSelectFragment = AdvancedFileSelectFragment.newInstance(null, null);
+                    }
+                    mFragmentManager.beginTransaction().replace(R.id.content, mAdvancedFileSelectFragment)
+                            .addToBackStack(TAG_FRAGMENT_ADVANCEDFILESELECTFRAGMENT).commitAllowingStateLoss();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(0, CMENU_CLEAR, 0, R.string.remove_from_filelist);
+    @Override
+    public String getCurrentFileName() {
+        return null;
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        super.onContextItemSelected(item);
-
-        if (item.getItemId() == CMENU_CLEAR) {
-            AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-
-            TextView tv = (TextView) acmi.targetView;
-            String filename = tv.getText().toString();
-            new AsyncTask<String, Void, Void>() {
-                protected java.lang.Void doInBackground(String... args) {
-                    String filename = args[0];
-                    mFileHistory.deleteFile(Uri.parse(args[0]));
-                    return null;
-                }
-
-                protected void onPostExecute(Void v) {
-                    refreshList();
-                }
-            }.execute(filename);
-            return true;
+    public void setPwdForNewDatabase(String fileName, String keyFile) {
+        // TODO: goto FillUsrPwdFragment for setting
+        if (mFragmentManager != null) {
+            mFragmentManager = getSupportFragmentManager();
         }
-
-        return false;
+        if (mAdvancedFileSelectFragment == null) {
+            mFillUsrPwdFragment = FillUsrPwdFragment.newInstance(fileName, keyFile, false);
+        } else {
+            Bundle args = mFillUsrPwdFragment.getArguments();
+            args.clear();
+            args.putString(FillUsrPwdFragment.ARG_FILENAME, fileName);
+            args.putString(FillUsrPwdFragment.ARG_KEYFILE, keyFile);
+        }
+        mFragmentManager.beginTransaction().replace(R.id.content, mFillUsrPwdFragment)
+                .addToBackStack(TAG_FRAGMENT_FILLUSRPWDFRAGMENT).commitAllowingStateLoss();
     }
 
-    private void refreshList() {
-        ((BaseAdapter) mAdapter).notifyDataSetChanged();
-    }
-
-    private boolean createDatabase(Context context, String filename) {
-        // Make sure file name exists
-        if (filename.length() == 0) {
-            Toast.makeText(context, R.string.error_filename_required, Toast.LENGTH_LONG).show();
-            return false;
+    @Override
+    public void openDatabase(String fileName, String keyFile) {
+        if (mFillUsrPwdFragment == null) {
+            mFillUsrPwdFragment = FillUsrPwdFragment.newInstance(fileName, keyFile, true);
+        } else {
+            Bundle args = mFillUsrPwdFragment.getArguments();
+            args.putString(FillUsrPwdFragment.ARG_FILENAME, fileName);
+            args.putString(FillUsrPwdFragment.ARG_KEYFILE, keyFile);
         }
-
-        // Try to create the file
-        File file = new File(filename);
-        try {
-            if (file.exists()) {
-                Toast.makeText(context, R.string.error_database_exists, Toast.LENGTH_LONG).show();
-                return false;
-            }
-            File parent = file.getParentFile();
-
-            if (parent == null || (parent.exists() && !parent.isDirectory())) {
-                Toast.makeText(context, R.string.error_invalid_path, Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-            if (!parent.exists()) {
-                // Create parent dircetory
-                if (!parent.mkdirs()) {
-                    Toast.makeText(context, R.string.error_could_not_create_parent, Toast.LENGTH_LONG).show();
-                    return false;
-                }
-            }
-
-            file.createNewFile();
-        } catch (IOException e) {
-            Toast.makeText(context, context.getText(R.string.error_file_not_create) + " " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        // Prep an object to collect a password once the database has
-        // been created
-        CollectPassword password = new CollectPassword(new LaunchGroupActivity(filename));
-
-        // Create the new database
-        CreateDB create = new CreateDB(context, filename, password, true);
-        ProgressTask createTask = new ProgressTask(context, create, R.string.progress_create);
-        createTask.run();
-        return true;
+        mFragmentManager.beginTransaction().replace(R.id.content, mFillUsrPwdFragment)
+                .addToBackStack(TAG_FRAGMENT_FILLUSRPWDFRAGMENT).commitAllowingStateLoss();
     }
-
 }

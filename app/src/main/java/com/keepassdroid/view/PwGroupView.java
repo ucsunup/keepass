@@ -38,78 +38,80 @@ import com.keepassdroid.settings.PrefsUtil;
 
 
 public class PwGroupView extends ClickView {
-	
-	protected PwGroup mPw;
-	protected GroupBaseActivity mAct;
-	protected TextView mTv;
 
-	protected static final int MENU_OPEN = Menu.FIRST;
-	
-	public static PwGroupView getInstance(GroupBaseActivity act, PwGroup pw) {
-		if ( pw instanceof PwGroupV3 ) {
-			return new PwGroupViewV3(act, pw);
-		} else {
-			return new PwGroupView(act, pw);
-		}
-	}
-	
-	protected PwGroupView(GroupBaseActivity act, PwGroup pw) {
-		super(act);
-		mAct = act;
-		
-		View gv = View.inflate(act, R.layout.group_list_entry, null);
-		
-		mTv = (TextView) gv.findViewById(R.id.group_text);
-		float size = PrefsUtil.getListTextSize(act); 
-		mTv.setTextSize(size);
-		
-		TextView label = (TextView) gv.findViewById(R.id.group_label);
-		label.setTextSize(size-8);
-		
-		populateView(gv, pw);
-		
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-		
-		addView(gv, lp);
-	}
-	
-	private void populateView(View gv, PwGroup pw) {
-		mPw = pw;
-		
-		ImageView iv = (ImageView) gv.findViewById(R.id.group_icon);
-		App.getDB().drawFactory.assignDrawableTo(iv, getResources(), pw.getIcon());
-		
-		mTv.setText(pw.getName());
-	}
-	
-	public void convertView(PwGroup pw) {
-		populateView(this, pw);
-	}
+    protected PwGroup mPw;
+    protected GroupBaseActivity mAct;
+    protected TextView mTv;
 
-	public void onClick() {
-		launchGroup();
-	}
-	
-	private void launchGroup() {
-		GroupActivity.Launch(mAct, mPw);
-	}
+    protected static final int MENU_OPEN = Menu.FIRST;
 
-	@Override
-	public void onCreateMenu(ContextMenu menu, ContextMenuInfo menuInfo) {
-		menu.add(0, MENU_OPEN, 0, R.string.menu_open);
-	}
+    public static PwGroupView getInstance(GroupBaseActivity act, PwGroup pw) {
+        if (pw instanceof PwGroupV3) {
+            return new PwGroupViewV3(act, pw);
+        } else {
+            return new PwGroupView(act, pw);
+        }
+    }
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch ( item.getItemId() ) {
-			
-		case MENU_OPEN:
-			launchGroup();
-			return true;
-		
-		default:
-			return false;
-		}
-	}
+    protected PwGroupView(GroupBaseActivity act, PwGroup pw) {
+        super(act);
+        mAct = act;
+
+        View gv = View.inflate(act, R.layout.group_list_entry, null);
+
+        mTv = (TextView) gv.findViewById(R.id.group_text);
+        float size = PrefsUtil.getListTextSize(act);
+        mTv.setTextSize(size);
+
+        TextView label = (TextView) gv.findViewById(R.id.group_label);
+        label.setTextSize(size - 8);
+
+        populateView(gv, pw);
+
+        LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+
+        addView(gv, lp);
+    }
+
+    private void populateView(View gv, PwGroup pw) {
+        mPw = pw;
+
+        ImageView iv = (ImageView) gv.findViewById(R.id.group_icon);
+        App.getDB().drawFactory.assignDrawableTo(iv, getResources(), pw.getIcon());
+
+        mTv.setText(pw.getName());
+    }
+
+    public void convertView(PwGroup pw) {
+        populateView(this, pw);
+    }
+
+    public void onClick() {
+        launchGroup();
+    }
+
+    public PwGroup getPwGroup() {
+        return mPw;
+    }
+
+    private void launchGroup() {
+        GroupActivity.Launch(mAct, mPw);
+    }
+
+    @Override
+    public void onCreateMenu(ContextMenu menu, ContextMenuInfo menuInfo) {
+        menu.add(0, MENU_OPEN, 0, R.string.menu_open);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_OPEN:
+                launchGroup();
+                return true;
+            default:
+                return false;
+        }
+    }
 
 }

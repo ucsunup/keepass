@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2012-2015 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -18,13 +17,9 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_toggle_pass"
+    <item
+        android:id="@+id/menu_toggle_pass"
         android:icon="@android:drawable/ic_menu_view"
-        android:title="@string/menu_showpass"
-    />
-    <item android:id="@+id/menu_donate"
-        android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/menu_donate"
-    />
+        android:title="@string/menu_showpass" />
 </menu>
 

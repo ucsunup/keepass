@@ -33,7 +33,8 @@
         <activity
             android:name="com.keepassdroid.fileselect.FileSelectActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar" />
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.keepassdroid.PasswordActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -80,7 +81,7 @@
         <activity
             android:name="com.keepassdroid.GroupActivityV3"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar">
+            android:theme="@style/Theme.AppCompat">
             <!-- This metadata entry causes .app.SearchQueryResults to be the default context -->
             <!-- whenever the user invokes search while in this Activity. -->
             <meta-data
@@ -90,7 +91,7 @@
         <activity
             android:name="com.keepassdroid.GroupActivityV4"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar">
+            android:theme="@style/Theme.AppCompat">
             <!-- This metadata entry causes .app.SearchQueryResults to be the default context -->
             <!-- whenever the user invokes search while in this Activity. -->
             <meta-data
@@ -101,32 +102,32 @@
         <activity
             android:name="com.keepassdroid.EntryActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name="com.keepassdroid.EntryActivityV4"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name="com.keepassdroid.LockingActivity"
             android:theme="@style/NoTitleBar"></activity>
         <activity
             android:name="com.keepassdroid.EntryEditActivityV3"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name="com.keepassdroid.EntryEditActivityV4"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name="com.keepassdroid.GroupEditActivity"
             android:theme="@style/Dialog"></activity>
         <activity
             android:name="com.keepassdroid.IconPickerActivity"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name="com.keepassdroid.search.SearchResults"
             android:launchMode="standard"
-            android:theme="@style/NoTitleBar">
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -140,7 +141,7 @@
             android:theme="@style/NoTitleBar"></activity>
         <activity
             android:name="com.keepassdroid.GeneratePasswordActivity"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/Theme.AppCompat"></activity>
 
         <service android:name="com.keepassdroid.services.TimeoutService"></service>
         <meta-data

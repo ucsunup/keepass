@@ -30,26 +30,23 @@ import com.keepassdroid.app.App;
 
 public class GroupHeaderView extends RelativeLayout {
 
-	public GroupHeaderView(Context context) {
-		this(context, null);
-	}
-	
-	public GroupHeaderView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		inflate(context);
-	}
-	
-	private void inflate(Context context) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.group_header, this);
-		
-		if (App.getDB().readOnly) {
-			View readOnlyIndicator = findViewById(R.id.read_only);
-			readOnlyIndicator.setVisibility(VISIBLE);
-		}
-		
-	}
+    public GroupHeaderView(Context context) {
+        this(context, null);
+    }
 
+    public GroupHeaderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
+        inflate(context);
+    }
+
+    private void inflate(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.group_header, this);
+
+        if (App.getDB().readOnly) {
+            View readOnlyIndicator = findViewById(R.id.read_only);
+            readOnlyIndicator.setVisibility(VISIBLE);
+        }
+    }
 }

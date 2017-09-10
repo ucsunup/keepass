@@ -27,32 +27,32 @@ import android.content.DialogInterface;
 import com.android.keepass.R;
 
 public class PasswordEncodingDialogHelper {
-	private AlertDialog dialog;
-	
-	public void show(Context ctx, DialogInterface.OnClickListener onclick) {
-		show(ctx, onclick, false);
-	}
+    private AlertDialog dialog;
 
-	public void show(Context ctx, DialogInterface.OnClickListener onclick, boolean showCancel) {
-	    AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-	    builder.setMessage(R.string.warning_password_encoding).setTitle(R.string.warning);
-	    builder.setPositiveButton(android.R.string.ok, onclick);
-	    
-	    
-	    if (showCancel) {
-	    	builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-				}
-			});
-	    	
-	    }
-	    
-	    dialog = builder.create();
-	    
-	    dialog.show();
-	}
+    public void show(Context ctx, DialogInterface.OnClickListener onclick) {
+        show(ctx, onclick, false);
+    }
+
+    public void show(Context ctx, DialogInterface.OnClickListener onclick, boolean showCancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setMessage(R.string.warning_password_encoding).setTitle(R.string.warning);
+        builder.setPositiveButton(android.R.string.ok, onclick);
+
+
+        if (showCancel) {
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+        }
+
+        dialog = builder.create();
+
+        dialog.show();
+    }
 
 }

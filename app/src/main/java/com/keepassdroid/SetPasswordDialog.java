@@ -39,111 +39,111 @@ import com.keepassdroid.utils.UriUtil;
 
 public class SetPasswordDialog extends CancelDialog {
 
-	private byte[] masterKey;
-	private Uri mKeyfile;
-	private FileOnFinish mFinish;
-		
-	public SetPasswordDialog(Context context) {
-		super(context);
-	}
-	
-	public SetPasswordDialog(Context context, FileOnFinish finish) {
-		super(context);
-		mFinish = finish;
-	}
-	
-	public byte[] getKey() {
-		return masterKey;
-	}
-	
-	public Uri keyfile() {
-		return mKeyfile;
-	}
+    private byte[] masterKey;
+    private Uri mKeyfile;
+    private FileOnFinish mFinish;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.set_password);
-		
-		setTitle(R.string.password_title);
-		
-		// Ok button
-		Button okButton = (Button) findViewById(R.id.ok);
-		okButton.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				TextView passView = (TextView) findViewById(R.id.pass_password);
-				String pass = passView.getText().toString();
-				TextView passConfView = (TextView) findViewById(R.id.pass_conf_password);
-				String confpass = passConfView.getText().toString();
-				
-				// Verify that passwords match
-				if ( ! pass.equals(confpass) ) {
-					// Passwords do not match
-					Toast.makeText(getContext(), R.string.error_pass_match, Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				TextView keyfileView = (TextView) findViewById(R.id.pass_keyfile);
-				Uri keyfile = UriUtil.parseDefaultFile(keyfileView.getText().toString());
-				mKeyfile = keyfile;
-				
-				// Verify that a password or keyfile is set
-				if ( pass.length() == 0 && EmptyUtils.isNullOrEmpty(keyfile)) {
-					Toast.makeText(getContext(), R.string.error_nopass, Toast.LENGTH_LONG).show();
-					return;
-					
-				}
-				
-				SetPassword sp = new SetPassword(getContext(), App.getDB(), pass, keyfile, new AfterSave(mFinish, new Handler()));
-				final ProgressTask pt = new ProgressTask(getContext(), sp, R.string.saving_database);
-				boolean valid = sp.validatePassword(getContext(), new OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						pt.run();
-					}
-				});
-				
-				if (valid) {
-				    pt.run();
-				}
-			}
-			
-		});
-		
-		// Cancel button
-		Button cancel = (Button) findViewById(R.id.cancel);
-		cancel.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				cancel();
-				if ( mFinish != null ) {
-					mFinish.run();
-				}
-			}
-		});
-	}
+    public SetPasswordDialog(Context context) {
+        super(context);
+    }
 
-	private class AfterSave extends OnFinish {
-		private FileOnFinish mFinish;
-		
-		public AfterSave(FileOnFinish finish, Handler handler) {
-			super(finish, handler);
-			mFinish = finish;
-		}
+    public SetPasswordDialog(Context context, FileOnFinish finish) {
+        super(context);
+        mFinish = finish;
+    }
 
-		@Override
-		public void run() {
-			if ( mSuccess ) {
-				if ( mFinish != null ) {
-					mFinish.setFilename(mKeyfile);
-				}
-				dismiss();
-			} else {
-				displayMessage(getContext());
-			}
-			super.run();
-		}
-	}
+    public byte[] getKey() {
+        return masterKey;
+    }
+
+    public Uri keyfile() {
+        return mKeyfile;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.set_password);
+
+        setTitle(R.string.password_title);
+
+        // Ok button
+        Button okButton = (Button) findViewById(R.id.ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                TextView passView = (TextView) findViewById(R.id.pass_password);
+                String pass = passView.getText().toString();
+                TextView passConfView = (TextView) findViewById(R.id.pass_conf_password);
+                String confpass = passConfView.getText().toString();
+
+                // Verify that passwords match
+                if (!pass.equals(confpass)) {
+                    // Passwords do not match
+                    Toast.makeText(getContext(), R.string.error_pass_match, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                TextView keyfileView = (TextView) findViewById(R.id.pass_keyfile);
+                Uri keyfile = UriUtil.parseDefaultFile(keyfileView.getText().toString());
+                mKeyfile = keyfile;
+
+                // Verify that a password or keyfile is set
+                if (pass.length() == 0 && EmptyUtils.isNullOrEmpty(keyfile)) {
+                    Toast.makeText(getContext(), R.string.error_nopass, Toast.LENGTH_LONG).show();
+                    return;
+
+                }
+
+                SetPassword sp = new SetPassword(getContext(), App.getDB(), pass, keyfile, new AfterSave(mFinish, new Handler()));
+                final ProgressTask pt = new ProgressTask(getContext(), sp, R.string.saving_database);
+                boolean valid = sp.validatePassword(getContext(), new OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pt.run();
+                    }
+                });
+
+                if (valid) {
+                    pt.run();
+                }
+            }
+
+        });
+
+        // Cancel button
+        Button cancel = (Button) findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                cancel();
+                if (mFinish != null) {
+                    mFinish.run();
+                }
+            }
+        });
+    }
+
+    private class AfterSave extends OnFinish {
+        private FileOnFinish mFinish;
+
+        public AfterSave(FileOnFinish finish, Handler handler) {
+            super(finish, handler);
+            mFinish = finish;
+        }
+
+        @Override
+        public void run() {
+            if (mSuccess) {
+                if (mFinish != null) {
+                    mFinish.setFilename(mKeyfile);
+                }
+                dismiss();
+            } else {
+                displayMessage(getContext());
+            }
+            super.run();
+        }
+    }
 }
