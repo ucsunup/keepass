@@ -11,7 +11,7 @@ android {
         versionCode 160
         versionName "1.0.0.0"
 
-        testApplicationId = "com.keepassdroid.tests"
+        testApplicationId = "com.android.keepass.tests"
         testInstrumentationRunner = "android.test.InstrumentationTestRunner"
 
         /*
@@ -43,8 +43,6 @@ android {
             applicationId = "com.android.keepass"
         }
     }
-
-
 }
 
 dependencies {
@@ -56,6 +54,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
 
     // Third library
     compile 'com.github.clans:fab:1.6.4'

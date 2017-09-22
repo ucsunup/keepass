@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="@string/entry_password" />
 
-    <com.keepassdroid.view.PasswordTextViewSelect
+    <com.android.keepass.view.PasswordTextViewSelect
         android:id="@+id/entry_password"
         style="@style/EntryItem"
         android:layout_width="fill_parent"

@@ -25,7 +25,7 @@
             android:enabled="false"
             android:key="@string/algorithm_key"
             android:title="@string/algorithm" />
-        <com.keepassdroid.settings.RoundsPreference
+        <com.android.keepass.settings.RoundsPreference
             android:dialogLayout="@layout/database_settings"
             android:key="@string/rounds_key"
             android:negativeButtonText="@string/entry_cancel"

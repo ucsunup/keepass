@@ -68,7 +68,7 @@
         android:padding="0sp"
         android:scrollbarStyle="insideOverlay">
 
-        <com.keepassdroid.view.EntryContentsView
+        <com.android.keepass.view.EntryContentsView
             android:id="@+id/entry_contents"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />

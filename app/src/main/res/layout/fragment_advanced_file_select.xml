@@ -2,29 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.keepassdroid.fragment.AdvancedFileSelectFragment">
+    tools:context="com.android.keepass.fragment.AdvancedFileSelectFragment">
 
-    <TextView
-        android:id="@+id/file_listtop"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:text="@string/open_recent" />
-
-    <com.keepassdroid.view.FileNameView
+    <com.android.keepass.view.FileNameView
         android:id="@+id/file_select"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/file_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@id/file_select"
-        android:layout_below="@id/file_listtop" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/file_select" />
 
 </RelativeLayout>

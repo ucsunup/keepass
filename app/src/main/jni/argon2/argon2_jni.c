@@ -1,20 +1,20 @@
 /*
  * Copyright 2017 Brian Pellin.
  *
- * This file is part of KeePassDroid.
+ * This file is part of KeePass.
  *
- *  KeePassDroid is free software: you can redistribute it and/or modify
+ *  KeePass is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
- *  KeePassDroid is distributed in the hope that it will be useful,
+ *  KeePass is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with KeePass.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,32 +28,32 @@
 static JavaVM *cached_vm;
 static jclass bad_arg, io, no_mem;
 
-JNIEXPORT jint JNICALL JNI_OnLoad( JavaVM *vm, void *reserved ) {
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env;
     jclass cls;
 
     cached_vm = vm;
-    if((*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_6))
+    if ((*vm)->GetEnv(vm, (void **) &env, JNI_VERSION_1_6))
         return JNI_ERR;
 
     cls = (*env)->FindClass(env, "java/lang/IllegalArgumentException");
-    if( cls == NULL )
+    if (cls == NULL)
         return JNI_ERR;
     bad_arg = (*env)->NewGlobalRef(env, cls);
-    if( bad_arg == NULL )
+    if (bad_arg == NULL)
         return JNI_ERR;
 
     cls = (*env)->FindClass(env, "java/io/IOException");
-    if( cls == NULL )
+    if (cls == NULL)
         return JNI_ERR;
     io = (*env)->NewGlobalRef(env, cls);
-    if( io == NULL )
+    if (io == NULL)
         return JNI_ERR;
     cls = (*env)->FindClass(env, "java/lang/OutOfMemoryError");
-    if( cls == NULL )
+    if (cls == NULL)
         return JNI_ERR;
     no_mem = (*env)->NewGlobalRef(env, cls);
-    if( no_mem == NULL )
+    if (no_mem == NULL)
         return JNI_ERR;
 
     /*
@@ -79,9 +79,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad( JavaVM *vm, void *reserved ) {
 }
 
 // called on garbage collection
-JNIEXPORT void JNICALL JNI_OnUnload( JavaVM *vm, void *reserved ) {
-JNIEnv *env;
-    if((*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_6)) {
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
+    JNIEnv *env;
+    if ((*vm)->GetEnv(vm, (void **) &env, JNI_VERSION_1_6)) {
         return;
     }
     (*env)->DeleteGlobalRef(env, bad_arg);
@@ -98,7 +98,6 @@ JNIEnv *env;
 }
 
 
-
 uint32_t getJNIArray(JNIEnv *env, jbyteArray array, uint8_t **output) {
     if (array == NULL) {
         *output = NULL;
@@ -106,8 +105,8 @@ uint32_t getJNIArray(JNIEnv *env, jbyteArray array, uint8_t **output) {
     }
 
     uint32_t len = (*env)->GetArrayLength(env, array);
-    uint8_t *buf = (uint8_t *)malloc(len);
-    (*env)->GetByteArrayRegion(env, array, 0, len, (jbyte*) buf);
+    uint8_t *buf = (uint8_t *) malloc(len);
+    (*env)->GetByteArrayRegion(env, array, 0, len, (jbyte *) buf);
 
     *output = buf;
 
@@ -129,9 +128,16 @@ void throwExceptionF(JNIEnv *env, jclass exception, const char *format, ...) {
 #define NB_BLOCKSIZE 1024
 
 JNIEXPORT jbyteArray
-JNICALL Java_com_keepassdroid_crypto_keyDerivation_Argon2Native_nTransformMasterKey(JNIEnv *env,
-   jobject this, jbyteArray password, jbyteArray salt, jint parallelism, jlong memory,
-   jlong iterations, jbyteArray secretKey, jbyteArray associatedData, jlong version) {
+JNICALL Java_com_android_keepass_crypto_keyDerivation_Argon2Native_nTransformMasterKey(JNIEnv *env,
+                                                                                       jobject this,
+                                                                                       jbyteArray password,
+                                                                                       jbyteArray salt,
+                                                                                       jint parallelism,
+                                                                                       jlong memory,
+                                                                                       jlong iterations,
+                                                                                       jbyteArray secretKey,
+                                                                                       jbyteArray associatedData,
+                                                                                       jlong version) {
 
     argon2_context context;
     uint8_t *out;

@@ -1,27 +1,81 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context="com.keepassdroid.fragment.FillUsrPwdFragment">
+    tools:context="com.android.keepass.fragment.FillUsrPwdFragment">
+
+    <TextView
+        android:id="@+id/db_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/database_name" />
+
+    <LinearLayout
+        android:id="@+id/more_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/db_name"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/more_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/db_filepath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/database_filepath" />
+
+            <CheckBox
+                android:id="@+id/set_default_db"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/database_set_default" />
+
+            <ImageButton
+                android:id="@+id/arrow_fold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingBottom="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/arrow_down" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/more_setting"
         android:layout_margin="30dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/pass_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:textColorHint="@android:color/darker_gray">
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/login_edittext_bg"
                 android:hint="@string/hint_pass"
                 android:inputType="textPassword"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@android:color/black" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -29,70 +83,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/pass_password"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="15dp"
+            android:textColorHint="@android:color/darker_gray">
 
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/pass_password"
+                android:background="@drawable/login_edittext_bg"
                 android:hint="@string/hint_conf_pass"
                 android:inputType="textPassword"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@android:color/black" />
         </android.support.design.widget.TextInputLayout>
 
-        <RelativeLayout
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pass_keyfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/pass_conf_password"
-            android:orientation="horizontal">
+            android:layout_marginTop="15dp"
+            android:textColorHint="@android:color/darker_gray">
 
-            <ImageButton
-                android:id="@+id/browse_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_launcher_folder_small" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/pass_keyfile"
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
+                android:background="@drawable/login_edittext_bg"
+                android:hint="@string/entry_keyfile"
+                android:textColor="@android:color/black" />
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/browse_button"
-                    android:hint="@string/entry_keyfile"
-                    android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
-        </RelativeLayout>
-
-
-        <LinearLayout
+        <Button
+            android:id="@+id/ok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/pass_keyfile"
             android:layout_marginTop="30dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/ok"
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@android:string/ok" />
-
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cancel" />
-
-        </LinearLayout>
+            android:text="@android:string/ok" />
 
     </LinearLayout>
 

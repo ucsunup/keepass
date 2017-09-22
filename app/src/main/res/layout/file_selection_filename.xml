@@ -20,52 +20,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/label_warning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/label_open_by_filename"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_filename" />
-
-    <LinearLayout
-        android:id="@+id/file_select_container"
+    <ImageButton
+        android:id="@+id/arrow_fold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label_open_by_filename"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:background="@android:color/transparent"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/arrow_up" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/file_filename_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/arrow_fold"
+        android:textColorHint="@android:color/darker_gray">
 
         <EditText
             android:id="@+id/file_filename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/browse_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_launcher_folder_small" />
-    </LinearLayout>
+            android:background="@drawable/login_edittext_bg"
+            android:drawableRight="@drawable/arrow_up"
+            android:hint="@string/enter_filename"
+            android:textColor="@android:color/black" />
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
+        android:id="@+id/btn_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/file_select_container"
+        android:layout_below="@id/file_filename_layout"
         android:orientation="horizontal"
         android:weightSum="2">
 
         <Button
             android:id="@+id/open"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:width="100sp"
@@ -73,7 +65,7 @@
 
         <Button
             android:id="@+id/create"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:width="100sp"

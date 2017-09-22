@@ -122,12 +122,12 @@
         android:text="@string/disclaimer_formal" />
 
     <Button
-        android:id="@+id/about_button"
+        android:id="@+id/donate_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/disclaimer"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:width="100sp"
-        android:text="@android:string/ok" />
+        android:text="@string/menu_donate" />
 </RelativeLayout>

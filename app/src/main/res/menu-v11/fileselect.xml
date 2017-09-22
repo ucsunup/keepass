@@ -22,7 +22,7 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/menu_db_advanced_setting" />
     <item
-        android:id="@+id/menu_donate"
+        android:id="@+id/menu_about"
         android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/menu_donate" />
+        android:title="@string/menu_about" />
 </menu>
