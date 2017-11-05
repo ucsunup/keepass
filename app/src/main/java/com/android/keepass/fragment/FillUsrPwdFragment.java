@@ -27,10 +27,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.keepass.R;
 import com.android.keepass.Database;
 import com.android.keepass.GroupActivity;
 import com.android.keepass.ProgressTask;
+import com.android.keepass.R;
 import com.android.keepass.app.App;
 import com.android.keepass.compat.BackupManagerCompat;
 import com.android.keepass.compat.EditorCompat;
@@ -43,9 +43,10 @@ import com.android.keepass.database.edit.SetPassword;
 import com.android.keepass.dialog.PasswordEncodingDialogHelper;
 import com.android.keepass.fileselect.BrowserDialog;
 import com.android.keepass.fileselect.RecentFileHistory;
+import com.android.keepass.timeout.TimeoutHelper;
 import com.android.keepass.utils.AnimatorUtils;
-import com.android.keepass.utils.Intents;
 import com.android.keepass.utils.EmptyUtils;
+import com.android.keepass.utils.Intents;
 import com.android.keepass.utils.Interaction;
 import com.android.keepass.utils.PermissionUtils;
 import com.android.keepass.utils.UriUtil;
@@ -118,21 +119,18 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
         PermissionUtils.requestWriteExternalStoragePermission(getContext());
         mRememberKeyfile = PreferenceManager.getDefaultSharedPreferences(getContext())
                 .getBoolean(getString(R.string.keyfile_key), getResources().getBoolean(R.bool.keyfile_default));
-        Log.d("heihei", "oncreate + " + getArguments().size());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d("heihei", "oncreateview " + mCurrentDbUri);
         return inflater.inflate(R.layout.fragment_fill_usr_pwd, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("heihei", "onStart " + mCurrentDbUri);
         // Init Field From Arguments, setArguments will run here always.
         new InitTask().execute(getArguments());
     }
@@ -140,7 +138,9 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("heihei", "onResume");
+        // start app, then clear last timeout recorder.
+        TimeoutHelper.clear(getContext());
+
         // Check to see if we need to change modes
 //        if (mFileHistory.hasRecentFiles() != mRecentMode) {
 //            // Restart the activity
@@ -178,9 +178,11 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                 } else {
                     newDefaultFileName = "";
                 }
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                editor.putString(KEY_DEFAULT_FILENAME, newDefaultFileName);
-                EditorCompat.apply(editor);
+                if (!TextUtils.isEmpty(newDefaultFileName)) {
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                    editor.putString(KEY_DEFAULT_FILENAME, newDefaultFileName);
+                    EditorCompat.apply(editor);
+                }
 
                 BackupManagerCompat backupManager = new BackupManagerCompat(getActivity());
                 backupManager.dataChanged();
@@ -189,7 +191,6 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                 String pass = mPassView.getText().toString();
                 String confpass = mPassConfView.getText().toString();
 
-                Log.d("heihei", "pass = " + pass + ", congPass = " + confpass + ", currentFile = " + mCurrentDbUri);
                 // Verify that passwords match
                 if (mCurrentModel == Model.REGISTER && !pass.equals(confpass)) {
                     // Passwords do not match
@@ -205,12 +206,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                     return;
                 }
 
-                Log.d("heihei", "createDatabse will do");
-                boolean createSuccess = createDatabase(mCurrentDbUri, pass, mCurrentKeyUri,
-                        new ProcessInitDB(
-                                pass,
-                                mCurrentKeyUri,
-                                new LoadDatabase(mCurrentDbUri, pass, mCurrentKeyUri != null ? mCurrentKeyUri.getPath() : null, null)));
+                boolean createSuccess = createDatabase(mCurrentDbUri, pass, mCurrentKeyUri, new LaunchGroupActivity(mCurrentDbUri));
                 break;
             case R.id.db_name:
             case R.id.arrow_fold:
@@ -222,6 +218,8 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                     AnimatorUtils.foldView(view, 0, mFoldSwitch, false);
                     mFoldSwitch.setSelected(false);
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -240,18 +238,15 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                 break;
             case REQUEST_CODE_GET_CONTENT:
             case REQUEST_CODE_OPEN_DOC:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        Uri uri = data.getData();
-                        if (uri != null) {
-                            if (requestCode == REQUEST_CODE_GET_CONTENT) {
-                                uri = UriUtil.translate(getContext(), uri);
-                            }
-                            String path = uri.toString();
-                            if (path != null) {
-                                mKeyfileView.setText(path);
-
-                            }
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    if (uri != null) {
+                        if (requestCode == REQUEST_CODE_GET_CONTENT) {
+                            uri = UriUtil.translate(getContext(), uri);
+                        }
+                        String path = uri.toString();
+                        if (path != null) {
+                            mKeyfileView.setText(path);
                         }
                     }
                 }
@@ -301,7 +296,6 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
         try {
             if (file.exists()) {
                 // If file exit, then enter
-                Log.d("heihei", "file.exists");
                 loadDatabase(getContext(), dbUri, pass, keyfile);
                 return true;
             }
@@ -312,7 +306,6 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                 return false;
             }
             PermissionUtils.requestWriteExternalStoragePermission(getContext());
-            Log.d("heihei", "createDatabase filename = " + dbUri.getPath() + ", pass = " + pass + ", keyFile = " + keyfile);
             if (!parent.exists()) {
                 // Create parent dircetory
                 if (!parent.mkdirs()) {
@@ -331,8 +324,10 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
 
         // Create the new database
         CreateDB create = new CreateDB(getActivity(), dbUri.getPath(),
-                new LaunchGroupActivity(dbUri.getPath(), onFinish), true);
-        ProgressTask createTask = new ProgressTask(getActivity(), create, R.string.progress_create);
+                new CollectPassword(onFinish, pass, keyfile),
+                true);
+        ProgressTask createTask = new ProgressTask(getContext(), create,
+                R.string.progress_create);
         createTask.run();
         return true;
     }
@@ -356,6 +351,37 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
         pt.run();
     }
 
+    private class CollectPassword extends FileOnFinish {
+        private Uri mKeyFile;
+        private String mPassword;
+
+        public CollectPassword(FileOnFinish finish, String password, Uri keyFile) {
+            super(finish);
+            mPassword = password;
+            mKeyFile = keyFile;
+        }
+
+        @Override
+        public void run() {
+            if (mSuccess) {
+                SetPassword sp = new SetPassword(getContext(), App.getDB(), mPassword, mKeyFile,
+                        new AfterSave((FileOnFinish) this.mOnFinish, new Handler()));
+                final ProgressTask pt = new ProgressTask(getContext(), sp, R.string.progress_create);
+                boolean valid = sp.validatePassword(getContext(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pt.run();
+                    }
+                });
+                if (valid) {
+                    pt.run();
+                }
+            } else {
+                super.run();
+            }
+        }
+    }
+
     private final class AfterLoad extends OnFinish {
         private Database db;
         private Activity mActivity;
@@ -376,13 +402,13 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GroupActivity.Launch(mActivity);
-                        FillUsrPwdFragment.this.getActivity().finish();
+                        mActivity.finish();
                     }
 
                 });
             } else if (mSuccess) {
                 GroupActivity.Launch(mActivity);
-                FillUsrPwdFragment.this.getActivity().finish();
+                mActivity.finish();
             } else {
                 displayMessage(mActivity);
             }
@@ -390,41 +416,34 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     }
 
     private class LaunchGroupActivity extends FileOnFinish {
-        private Uri mUri;
 
-        public LaunchGroupActivity(String filename, FileOnFinish onFinish) {
-            super(onFinish);
-            mUri = UriUtil.parseDefaultFile(filename);
+        public LaunchGroupActivity(Uri filename) {
+            super(null);
+            setFilename(filename);
         }
 
         @Override
         public void run() {
-            Log.d("heihei", "LaunchGroupActivity: mSuccess = " + mSuccess);
             if (mSuccess) {
-                super.run();
                 // Add to recent files
-                mFileHistory.createFile(mUri, getFilename());
+                mFileHistory.createFile(getFilename(), getFilename());
                 GroupActivity.Launch(getActivity());
                 getActivity().finish();
+                super.run();
             }
         }
     }
 
-    private class AfterSave extends OnFinish {
-        private FileOnFinish mFinish;
+    private class AfterSave extends FileOnFinish {
 
         public AfterSave(FileOnFinish finish, Handler handler) {
             super(finish, handler);
-            mFinish = finish;
         }
 
         @Override
         public void run() {
-            Log.d("heihei", "FillUsrPWdFragment: AfterSave: mSuccess = " + mSuccess);
-            if (mSuccess) {
-                if (mFinish != null) {
-                    mFinish.setFilename(UriUtil.parseDefaultFile(mCurrentKeyUri));
-                }
+            if (mSuccess && mOnFinish != null) {
+                mOnFinish.setResult(true);
             } else {
                 displayMessage(getContext());
             }
@@ -432,61 +451,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private class ProcessInitDB extends FileOnFinish {
-        private String mPass;
-
-        public ProcessInitDB(String pass, Uri keyfile, FileOnFinish onFinish) {
-            super(onFinish);
-            mPass = pass;
-            setFilename(keyfile);
-        }
-
-        @Override
-        public void run() {
-            Log.d("heihei", "FillUsrPWdFragment: ProcessInitDb: mSuccess = " + mSuccess);
-            if (mSuccess) {
-                SetPassword sp = new SetPassword(getContext(), App.getDB(), mPass, getFilename(),
-                        new AfterSave(mFinish, new Handler()));
-                final ProgressTask pt = new ProgressTask(getContext(), sp, R.string.saving_database);
-                boolean valid = sp.validatePassword(getContext(), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pt.run();
-                    }
-                });
-
-                if (valid) {
-                    pt.run();
-                }
-            }
-        }
-    }
-
-    private class LoadDatabase extends FileOnFinish {
-        private String mPass;
-        private String mKeyFile;
-
-        public LoadDatabase(Uri fileName, String pass, String keyFile, FileOnFinish finish) {
-            super(finish);
-            setFilename(fileName);
-            this.mPass = pass;
-            this.mKeyFile = keyFile;
-        }
-
-        @Override
-        public void run() {
-            Log.d("heihei", "LoadDatabse: filename = " + getFilename() + ", pass = " + mPass + ", mKEeyFile  = " + mKeyFile
-                    + ", mSuccess = " + mSuccess);
-            if (mSuccess) {
-                loadDatabase(getContext(), getFilename(), mPass, UriUtil.parseDefaultFile(mKeyFile));
-            }
-            super.run();
-        }
-    }
-
     private void lookForOpenIntentsFilePicker(Uri dbUri) {
-        Log.d("heihei", "LoadDatabase: dbUri = " + dbUri.toString());
         if (Interaction.isIntentAvailable(getContext(), Intents.OPEN_INTENTS_FILE_BROWSE)) {
             Intent i = new Intent(Intents.OPEN_INTENTS_FILE_BROWSE);
 
@@ -536,7 +501,6 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
             }
             password = arguments.getString(ARG_PASSWORD);
             launch_immediately = arguments.getBoolean(ARG_LAUNCH_IMMEDIATELY, false);
-            Log.d("heihei", "doInBackground dbUri = " + mCurrentDbUri + ", keyFile = " + mCurrentKeyUri);
             if (mCurrentKeyUri == null || mCurrentKeyUri.toString().length() == 0) {
                 mCurrentKeyUri = getKeyFile(mCurrentDbUri);
             }
@@ -559,10 +523,10 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                     }
                 }
             }
-            Log.d("heihei", "fileName = " + mCurrentDbUri + ", KeyFileName = " + mCurrentKeyUri + ", mode = " + mCurrentModel);
             return null;
         }
 
+        @Override
         public void onPostExecute(Integer result) {
             if (result != null) {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
@@ -573,17 +537,19 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
 //            populateView();
 
             final View view = FillUsrPwdFragment.this.getView();
-            TextInputLayout passInputLayout = (TextInputLayout) view.findViewById(R.id.pass_password);
+            TextInputLayout passInputLayout = view.findViewById(R.id.pass_password);
             mPassView = passInputLayout.getEditText();
             ViewUtils.updateToogleView(getContext(), passInputLayout, R.drawable.password_toggle, null);
             if (!TextUtils.isEmpty(password)) {
                 mPassView.setText(password);
             }
-            mPassConfView = ((TextInputLayout) view.findViewById(R.id.pass_conf_password)).getEditText();
+            TextInputLayout passConfigInputLayout = view.findViewById(R.id.pass_conf_password);
+            mPassConfView = passConfigInputLayout.getEditText();
+            ViewUtils.updateToogleView(getContext(), passConfigInputLayout, R.drawable.password_toggle, null);
             if (mCurrentModel == Model.LOGIN) {
                 view.findViewById(R.id.pass_conf_password).setVisibility(View.GONE);
             }
-            TextInputLayout passKeyFileLayput = (TextInputLayout) view.findViewById(R.id.pass_keyfile);
+            TextInputLayout passKeyFileLayput = view.findViewById(R.id.pass_keyfile);
             mKeyfileView = passKeyFileLayput.getEditText();
             ViewUtils.updateToogleView(getContext(), passKeyFileLayput, R.drawable.file,
                     new View.OnClickListener() {
@@ -608,14 +574,14 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                         }
                     });
             // Ok button
-            Button okButton = (Button) view.findViewById(R.id.ok);
+            Button okButton = view.findViewById(R.id.ok);
             okButton.setOnClickListener(FillUsrPwdFragment.this);
-            mFoldSwitch = (ImageButton) view.findViewById(R.id.arrow_fold);
+            mFoldSwitch = view.findViewById(R.id.arrow_fold);
             mFoldSwitch.setOnClickListener(FillUsrPwdFragment.this);
 
-            mDbName = (TextView) view.findViewById(R.id.db_name);
+            mDbName = view.findViewById(R.id.db_name);
             mDbName.setOnClickListener(FillUsrPwdFragment.this);
-            mDbPath = (TextView) view.findViewById(R.id.db_filepath);
+            mDbPath = view.findViewById(R.id.db_filepath);
             String fileName = mCurrentDbUri.getLastPathSegment();
             mDbName.setText(fileName.substring(0, fileName.indexOf(".")));
             mDbPath.setText(mCurrentDbUri.getPath());
@@ -627,10 +593,9 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
             });
 
             // update checkbox state
-            mSetDefaultDb = (CheckBox) view.findViewById(R.id.set_default_db);
+            mSetDefaultDb = view.findViewById(R.id.set_default_db);
             String oldDefaultDb = PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getString(KEY_DEFAULT_FILENAME, DEFAULT_FILENAME);
-            Log.d("heihei", "oldFile = " + oldDefaultDb + ", newFile = " + mCurrentDbUri.toString());
             if (UriUtil.equalsDefaultfile(mCurrentDbUri, oldDefaultDb)) {
                 mSetDefaultDb.setChecked(true);
             } else {
@@ -648,8 +613,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     private void retrieveSettings(Context context) {
         String defaultFilename = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_DEFAULT_FILENAME, "");
         if (!EmptyUtils.isNullOrEmpty(mCurrentDbUri.getPath()) && UriUtil.equalsDefaultfile(mCurrentDbUri, defaultFilename)) {
-//            CheckBox checkbox = (CheckBox) findViewById(R.id.default_database);
-//            checkbox.setChecked(true);
+            mSetDefaultDb.setChecked(true);
         }
     }
 

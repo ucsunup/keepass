@@ -49,7 +49,7 @@
                 android:background="@android:color/transparent"
                 android:paddingBottom="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_down" />
+                android:src="@drawable/arrow_down_light" />
         </LinearLayout>
 
     </LinearLayout>
@@ -66,10 +66,11 @@
             android:id="@+id/pass_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@android:color/darker_gray">
+            android:textColorHint="@android:color/darker_gray"
+            app:passwordToggleEnabled="true">
 
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edittext_bg"
                 android:hint="@string/hint_pass"
@@ -84,7 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/pass_password"
             android:layout_marginTop="15dp"
-            android:textColorHint="@android:color/darker_gray">
+            android:textColorHint="@android:color/darker_gray"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:layout_width="match_parent"
@@ -102,7 +104,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/pass_conf_password"
             android:layout_marginTop="15dp"
-            android:textColorHint="@android:color/darker_gray">
+            android:textColorHint="@android:color/darker_gray"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:layout_width="match_parent"

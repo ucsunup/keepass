@@ -26,7 +26,6 @@ public abstract class LockCloseListActivity extends LockingActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         TimeoutHelper.checkShutdown(this);
     }
 }

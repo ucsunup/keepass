@@ -16,46 +16,79 @@
   You should have received a copy of the GNU General Public License
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_margin="10dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.android.keepass.view.GroupHeaderView
-        android:id="@+id/group_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="true"
+        app:theme="@style/AppTheme.AppBarOverlay">
 
-    <ListView
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:collapsedTitleGravity="center"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="bottom|left"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <com.android.keepass.view.GroupHeaderView
+                android:id="@+id/group_header"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:gravity="center_vertical"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/group_list"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/group_header" />
+        android:layout_below="@id/app_bar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        app:fab_colorNormal="@android:color/darker_gray"
-        app:fab_colorPressed="@android:color/black"
-        app:fab_colorRipple="@android:color/holo_purple"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        app:menu_colorNormal="@color/fab_background_normal"
+        app:menu_colorPressed="@color/fab_background_press"
+        app:menu_colorRipple="@color/fab_background_normal"
         app:menu_fab_size="normal"
-        app:menu_icon="@android:drawable/ic_menu_edit"
+        app:menu_labels_colorNormal="@color/fab_sub_background_normal"
+        app:menu_labels_colorPressed="@color/fab_sub_background_press"
+        app:menu_labels_colorRipple="@color/fab_background_press"
         app:menu_showShadow="true">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_submenu_add_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_edit"
-            app:fab_colorNormal="@android:color/darker_gray"
-            app:fab_colorPressed="@android:color/black"
-            app:fab_colorRipple="@android:color/holo_purple"
+            android:padding="3dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/write"
+            app:fab_colorNormal="@color/fab_sub_background_normal"
+            app:fab_colorPressed="@color/fab_sub_background_press"
+            app:fab_colorRipple="@color/fab_background_press"
             app:fab_label="@string/add_group"
             app:fab_size="mini" />
 
@@ -63,11 +96,13 @@
             android:id="@+id/fab_submenu_add_entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_edit"
-            app:fab_colorNormal="@android:color/darker_gray"
-            app:fab_colorPressed="@android:color/black"
-            app:fab_colorRipple="@android:color/holo_purple"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/write"
+            app:fab_colorNormal="@color/fab_sub_background_normal"
+            app:fab_colorPressed="@color/fab_sub_background_press"
+            app:fab_colorRipple="@color/fab_background_press"
             app:fab_label="@string/add_entry"
             app:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

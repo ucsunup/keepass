@@ -50,6 +50,7 @@ public class UpdateStatus {
             mResId = resId;
         }
 
+        @Override
         public void run() {
             mPD.setMessage(mCtx.getString(mResId));
         }

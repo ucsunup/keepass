@@ -16,40 +16,19 @@
   You should have received a copy of the GNU General Public License
   along with KeePass.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:id="@+id/btn_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/entry_save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/entry_save" />
-
-        <Button
-            android:id="@+id/entry_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/entry_cancel" />
-    </LinearLayout>
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/entry_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btn_group"
         android:fillViewport="true"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -112,21 +91,11 @@
 
             <!-- Password -->
 
-            <Button
-                android:id="@+id/generate_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/entry_url"
-                android:text="@string/ellipsis" />
-
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/entry_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/generate_button"
-                android:layout_below="@id/entry_url"
-                android:layout_toLeftOf="@id/generate_button">
+                android:layout_below="@id/entry_url">
 
                 <com.android.keepass.view.PasswordEditText
                     android:layout_width="match_parent"
@@ -190,4 +159,44 @@
                 android:visibility="gone" />
         </RelativeLayout>
     </ScrollView>
-</RelativeLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        app:menu_colorNormal="@color/fab_background_normal"
+        app:menu_colorPressed="@color/fab_background_press"
+        app:menu_colorRipple="@color/fab_background_normal"
+        app:menu_fab_size="normal"
+        app:menu_labels_colorNormal="@color/fab_sub_background_normal"
+        app:menu_labels_colorPressed="@color/fab_sub_background_press"
+        app:menu_labels_colorRipple="@color/fab_background_press"
+        app:menu_showShadow="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_submenu_entry_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:src="@drawable/write"
+            app:fab_colorNormal="@color/fab_sub_background_normal"
+            app:fab_colorPressed="@color/fab_sub_background_press"
+            app:fab_colorRipple="@color/fab_background_press"
+            app:fab_label="@string/entry_save"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_submenu_entry_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:src="@drawable/write"
+            app:fab_colorNormal="@color/fab_sub_background_normal"
+            app:fab_colorPressed="@color/fab_sub_background_press"
+            app:fab_colorRipple="@color/fab_background_press"
+            app:fab_label="@string/entry_cancel"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
+</android.support.design.widget.CoordinatorLayout>

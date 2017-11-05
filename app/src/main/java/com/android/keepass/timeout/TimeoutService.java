@@ -33,7 +33,7 @@ import com.android.keepass.app.App;
 import com.android.keepass.utils.Intents;
 
 public class TimeoutService extends Service {
-    private static final String TAG = "KeePassDroid Timer";
+    private static final String TAG = "KeePass Timer";
     private BroadcastReceiver mIntentReceiver;
 
     @Override
@@ -76,9 +76,7 @@ public class TimeoutService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Log.d(TAG, "Timeout service stopped");
-
         unregisterReceiver(mIntentReceiver);
     }
 

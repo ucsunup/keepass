@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009-2015 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -17,24 +16,38 @@
   You should have received a copy of the GNU General Public License
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:stretchColumns="1">
-    <TableRow android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-	  android:gravity="center_vertical">
-        <ImageView android:id="@+id/entry_icon"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="5dp"
-          android:scaleType="fitXY"
-          android:src="@drawable/ic99_blank"/>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="1dp"
+    android:stretchColumns="1"
+    app:cardCornerRadius="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/entry_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic99_blank" />
+
         <TextView
-          android:id="@+id/entry_text"
-          android:layout_height="wrap_content"
-          android:layout_width="wrap_content"
-          style="@style/ElementTextLarge"/>
-        <View/>
-    </TableRow>
-</TableLayout>
+            android:id="@+id/entry_text"
+            style="@style/ElementTextLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

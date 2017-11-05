@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  * Created by ucsunup on 2017/9/20.
  */
 
-public class CardListAdapter<V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
+public abstract class CardListAdapter<V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
 
     ListenerInfo mListenerInfo;
 
@@ -28,9 +28,9 @@ public class CardListAdapter<V extends RecyclerView.ViewHolder> extends Recycler
         return 0;
     }
 
-    class ListenerInfo {
-        protected OnClickListener mOnClickListener;
-        protected OnLongClickListener mOnLongClickListener;
+    protected class ListenerInfo {
+        public OnClickListener mOnClickListener;
+        public OnLongClickListener mOnLongClickListener;
     }
 
     /**
@@ -38,7 +38,6 @@ public class CardListAdapter<V extends RecyclerView.ViewHolder> extends Recycler
      * clickable, it becomes clickable.
      *
      * @param l The callback that will run
-     * @see #setClickable(boolean)
      */
     public void setOnClickListener(@Nullable OnClickListener l) {
         getListenerInfo().mOnClickListener = l;
@@ -49,7 +48,6 @@ public class CardListAdapter<V extends RecyclerView.ViewHolder> extends Recycler
      * long clickable, it becomes long clickable.
      *
      * @param l The callback that will run
-     * @see #setLongClickable(boolean)
      */
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         getListenerInfo().mOnLongClickListener = l;
@@ -81,10 +79,9 @@ public class CardListAdapter<V extends RecyclerView.ViewHolder> extends Recycler
     }
 
     protected ListenerInfo getListenerInfo() {
-        if (mListenerInfo != null) {
-            return mListenerInfo;
+        if (mListenerInfo == null) {
+            mListenerInfo = new ListenerInfo();
         }
-        mListenerInfo = new ListenerInfo();
         return mListenerInfo;
     }
 }

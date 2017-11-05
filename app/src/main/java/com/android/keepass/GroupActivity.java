@@ -1,6 +1,6 @@
 /*
  * Copyright 2009-2014 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -20,24 +20,21 @@
 package com.android.keepass;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
 import com.android.keepass.app.KeePass;
 import com.github.clans.fab.FloatingActionButton;
@@ -52,7 +49,6 @@ import com.android.keepass.database.PwGroupV3;
 import com.android.keepass.database.PwGroupV4;
 import com.android.keepass.database.edit.AddGroup;
 import com.android.keepass.dialog.ReadOnlyDialog;
-import com.android.keepass.view.ClickView;
 import com.android.keepass.view.GroupViewOnlyView;
 import com.android.keepass.view.PwGroupView;
 
@@ -119,34 +115,37 @@ public abstract class GroupActivity extends GroupBaseActivity {
         Log.w(TAG, "Creating group view");
         Intent intent = getIntent();
 
-        PwGroupId id = retrieveGroupId(intent);
         mGroupHistory.clear();
+        PwGroupId id = retrieveGroupId(intent);
         refreshListView(id);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
-
-        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
-        ClickView cv = (ClickView) acmi.targetView;
-        cv.onCreateMenu(menu, menuInfo);
+        // For ListView ContextMenu
+//        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
+//        ClickView cv = (ClickView) acmi.targetView;
+//        cv.onCreateMenu(menu, menuInfo);
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-        ClickView cv = (ClickView) acmi.targetView;
-
-        switch (item.getItemId()) {
-            case Menu.FIRST:
-                if (cv instanceof PwGroupView) {
-                    onClickGroup(((PwGroupView) cv).getPwGroup());
-                    return true;
-                }
-        }
-        return cv.onContextItemSelected(item);
+        // For ListView ContextMenu
+//        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+//        ClickView cv = (ClickView) acmi.targetView;
+//
+//        switch (item.getItemId()) {
+//            case Menu.FIRST:
+//                if (cv instanceof PwGroupView) {
+//                    onClickGroup(((PwGroupView) cv).getPwGroup());
+//                    return true;
+//                }
+//        }
+//        return cv.onContextItemSelected(item);
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -190,7 +189,6 @@ public abstract class GroupActivity extends GroupBaseActivity {
 
     @Override
     protected void onClickGroup(PwGroup pwGroup) {
-
         mGroupHistory.add(mGroup);
         mGroup = pwGroup;
         refreshListView(getIdFromPwGroup(mGroup));
@@ -226,7 +224,11 @@ public abstract class GroupActivity extends GroupBaseActivity {
         Log.w(TAG, "Retrieved group");
         if (mGroup == null) {
             Log.w(TAG, "Group was null");
-            return;
+            if (db.pm instanceof PwDatabaseV4) {
+                return;
+            } else if (db.pm instanceof PwDatabaseV3) {
+                mGroup = root;
+            }
         }
 
         isRoot = mGroup == root;
@@ -238,6 +240,18 @@ public abstract class GroupActivity extends GroupBaseActivity {
         } else {
             setContentView(new GroupViewOnlyView(this));
         }
+        // init ToolBar, and make AppBarLayout height == 2 * Toolbar.Height
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        appBarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams lp = appBarLayout.getLayoutParams();
+                lp.height = 2 * getSupportActionBar().getHeight();
+                appBarLayout.setLayoutParams(lp);
+            }
+        });
+
         Log.w(TAG, "Set view");
         final FloatingActionMenu editMenu = (FloatingActionMenu) findViewById(R.id.menu_group);
         FloatingActionButton addGroupBtn = (FloatingActionButton) findViewById(R.id.fab_submenu_add_group);
@@ -272,45 +286,26 @@ public abstract class GroupActivity extends GroupBaseActivity {
         setGroupTitle();
         setGroupIcon();
 
-        setListAdapter(new PwGroupListAdapter(this, mGroup));
+        setListAdapter(new PwGroupListAdapter(this, mGroup, new PwGroupListAdapter.OnPWMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item, View v) {
+                switch (item.getItemId()) {
+                    case Menu.FIRST:
+                        if (v instanceof PwGroupView) {
+                            onClickGroup(((PwGroupView) v).getPwGroup());
+                            return true;
+                        }
+                    default:
+                        break;
+                }
+                return false;
+            }
+        }));
         registerForContextMenu(getListView());
         Log.w(TAG, "Finished creating group");
 
         if (isRoot) {
             showWarnings();
         }
-    }
-
-    private void addNewGroup(final Context context) {
-        final EditText nameField = new EditText(context);
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.add_group_title)
-                .setIcon(R.drawable.ic00)
-                .setView(nameField)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = nameField.getText().toString();
-
-                        if (name.length() > 0) {
-                            final Intent intent = new Intent();
-
-                            intent.putExtra(KEY_NAME, name);
-                            intent.putExtra(KEY_ICON_ID, 0);
-                            setResult(Activity.RESULT_OK, intent);
-
-                            finish();
-                        } else {
-                            Toast.makeText(context, R.string.error_no_name, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //
-                    }
-                })
-                .show();
     }
 }

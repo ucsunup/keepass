@@ -22,18 +22,17 @@ package com.android.keepass;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.keepass.app.KeePass;
@@ -41,7 +40,11 @@ import com.android.keepass.app.App;
 import com.android.keepass.compat.ActivityCompat;
 import com.android.keepass.compat.EditorCompat;
 import com.android.keepass.database.PwGroup;
+import com.android.keepass.database.PwIconCustom;
+import com.android.keepass.database.PwIconStandard;
 import com.android.keepass.database.edit.OnFinish;
+import com.android.keepass.dialog.SetPasswordfDialog;
+import com.android.keepass.fragment.CardListAdapter;
 import com.android.keepass.settings.AppSettingsActivity;
 import com.android.keepass.view.ClickView;
 import com.android.keepass.view.GroupViewOnlyView;
@@ -50,8 +53,8 @@ import com.android.keepass.view.PwGroupView;
 import java.util.LinkedList;
 
 public abstract class GroupBaseActivity extends LockCloseListActivity {
-    protected ListView mList;
-    protected ListAdapter mAdapter;
+    protected RecyclerView mList;
+    protected CardListAdapter mAdapter;
 
     public static final String KEY_ENTRY = "entry";
     public static final String KEY_MODE = "mode";
@@ -64,7 +67,6 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         refreshIfDirty();
     }
 
@@ -72,12 +74,12 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
         Database db = App.getDB();
         if (db.dirty.contains(mGroup)) {
             db.dirty.remove(mGroup);
-            ((BaseAdapter) mAdapter).notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        ClickView cv = (ClickView) mAdapter.getView(position, null, null);
+    protected void onListItemClick(View v, int position) {
+        ClickView cv = (ClickView) v;
         if (cv instanceof PwGroupView) {
             onClickGroup(((PwGroupView) cv).getPwGroup());
         } else {
@@ -98,73 +100,65 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
             return;
         }
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        ActivityCompat.invalidateOptionsMenu(this);
-
         setContentView(new GroupViewOnlyView(this));
         setResult(KeePass.EXIT_NORMAL);
 
-        styleScrollBars();
-
-    }
-
-    protected void styleScrollBars() {
-        ensureCorrectListView();
-        mList.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-        mList.setTextFilterEnabled(true);
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        ActivityCompat.invalidateOptionsMenu(this);
     }
 
     protected void setGroupTitle() {
         if (mGroup != null) {
             StringBuilder nameBuilder = new StringBuilder("");
             for (PwGroup group : mGroupHistory) {
-                nameBuilder.append(group.getName()).append("/");
+                nameBuilder.append(TextUtils.isEmpty(group.getName()) ? getString(R.string.app_name) : group.getName()).append("/");
             }
-            ;
             nameBuilder.append(mGroup.getName());
             TextView tv = (TextView) findViewById(R.id.group_name);
-            tv.setText(nameBuilder != null ? nameBuilder.toString() : getText(R.string.root));
+            tv.setText(nameBuilder != null && nameBuilder.length() > 0 ? nameBuilder.toString() : getText(R.string.app_name));
+            getSupportActionBar().setTitle("");
         }
     }
 
     protected void setGroupIcon() {
-        if (mGroup != null) {
-            ImageView iv = (ImageView) findViewById(R.id.icon);
-            App.getDB().drawFactory.assignDrawableTo(iv, getResources(), mGroup.getIcon());
+        if (mGroup != null && mGroup.getIcon() != null) {
+            Drawable drawable;
+            if (mGroup.getIcon() instanceof PwIconStandard) {
+                drawable = App.getDB().drawFactory.getIconDrawable(getResources(), (PwIconStandard) mGroup.getIcon());
+            } else {
+                drawable = App.getDB().drawFactory.getIconDrawable(getResources(), (PwIconCustom) mGroup.getIcon());
+            }
+            getSupportActionBar().setIcon(drawable);
         }
     }
 
-    protected void setListAdapter(ListAdapter adapter) {
+    protected void setListAdapter(CardListAdapter adapter) {
         ensureCorrectListView();
         mAdapter = adapter;
+        mAdapter.setOnClickListener(new CardListAdapter.OnClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                onListItemClick(v, position);
+            }
+        });
         mList.setAdapter(adapter);
     }
 
-    protected ListView getListView() {
+    protected RecyclerView getListView() {
         ensureCorrectListView();
         return mList;
     }
 
     private void ensureCorrectListView() {
-        mList = (ListView) findViewById(R.id.group_list);
-        mList.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                        onListItemClick((ListView) parent, v, position, id);
-                    }
-                }
-        );
+        mList = (RecyclerView) findViewById(R.id.group_list);
+        mList.setLayoutManager(new LinearLayoutManager(this));
+        mList.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.group, menu);
-
+        getMenuInflater().inflate(R.menu.group, menu);
         return true;
     }
 
@@ -183,7 +177,10 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
             resId = R.string.sort_name;
         }
 
-        menu.findItem(R.id.menu_sort).setTitle(resId);
+        MenuItem menuItem = menu.findItem(R.id.menu_sort);
+        if (menuItem != null) {
+            menuItem.setTitle(resId);
+        }
     }
 
     @Override
@@ -191,10 +188,8 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
         if (!super.onPrepareOptionsMenu(menu)) {
             return false;
         }
-
         setSortMenuText(menu);
-
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -205,25 +200,21 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
                 setResult(KeePass.EXIT_LOCK);
                 finish();
                 return true;
-
             case R.id.menu_search:
                 onSearchRequested();
                 return true;
-
             case R.id.menu_app_settings:
                 AppSettingsActivity.Launch(this, true);
                 return true;
-
             case R.id.menu_change_master_key:
                 setPassword();
                 return true;
-
             case R.id.menu_sort:
                 toggleSort();
                 return true;
-
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -245,13 +236,12 @@ public abstract class GroupBaseActivity extends LockCloseListActivity {
         db.dirty.remove(mGroup);
 
         // Tell the adapter to refresh it's list
-        ((BaseAdapter) mAdapter).notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
     }
 
     private void setPassword() {
-        SetPasswordDialog dialog = new SetPasswordDialog(this);
-        dialog.show();
+        SetPasswordfDialog.Launch(this);
     }
 
     public class RefreshTask extends OnFinish {

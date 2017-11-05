@@ -18,8 +18,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:layout_height="match_parent">
 
     <ImageButton
         android:id="@+id/icon_button"
@@ -27,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/ic00" />
 
     <EditText
@@ -35,7 +34,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_toLeftOf="@+id/icon_button"
         android:hint="@string/hint_group_name"
         android:singleLine="true" />
@@ -45,7 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/group_name"
         android:layout_marginTop="30dp"
+        android:divider="@android:color/background_dark"
         android:orientation="horizontal"
+        android:showDividers="middle"
         android:weightSum="2">
 
         <Button
@@ -53,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/btn_background"
             android:text="@android:string/ok" />
 
         <Button
@@ -60,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/btn_background"
             android:text="@string/cancel" />
     </LinearLayout>
 </RelativeLayout>

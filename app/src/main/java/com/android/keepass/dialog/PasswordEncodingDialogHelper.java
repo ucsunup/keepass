@@ -20,7 +20,6 @@
 package com.android.keepass.dialog;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
@@ -46,11 +45,8 @@ public class PasswordEncodingDialogHelper {
                     dialog.cancel();
                 }
             });
-
         }
-
         dialog = builder.create();
-
         dialog.show();
     }
 }

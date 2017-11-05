@@ -20,6 +20,7 @@
 package com.android.keepass.database.edit;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -49,7 +50,6 @@ public class SaveDB extends RunnableOnFinish {
 
     @Override
     public void run() {
-
         if (!mDontSave) {
             try {
                 mDb.SaveData(mCtx);
@@ -65,8 +65,6 @@ public class SaveDB extends RunnableOnFinish {
 				*/
             }
         }
-
         finish(true);
     }
-
 }

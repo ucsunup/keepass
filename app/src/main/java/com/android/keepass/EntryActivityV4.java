@@ -19,6 +19,7 @@
  */
 package com.android.keepass;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import android.view.View;
@@ -44,11 +45,8 @@ public class EntryActivityV4 extends EntryActivity {
     protected void fillData(boolean trimList) {
         super.fillData(trimList);
 
-        ViewGroup group = (ViewGroup) findViewById(R.id.extra_strings);
-
-        if (trimList) {
-            group.removeAllViews();
-        }
+        // clear old more data
+        mListAdapter.refreshData(new ArrayList(mListAdapter.getData().subList(0, mListAdapter.MIN_COUNT)));
 
         PwEntryV4 entry = (PwEntryV4) mEntry;
 
@@ -62,10 +60,10 @@ public class EntryActivityV4 extends EntryActivity {
 
                 if (!PwEntryV4.IsStandardString(key)) {
                     String text = pair.getValue().toString();
-                    View view = new EntrySection(this, null, key, spr.compile(text, entry, pm));
-                    group.addView(view);
+                    mListAdapter.addMoreInfo(key, spr.compile(text, entry, pm));
                 }
             }
         }
+        mListAdapter.notifyDataSetChanged();
     }
 }

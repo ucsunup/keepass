@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.keepass.R;
 import com.android.keepass.utils.Util;
 
 public class AboutDialog extends Dialog {

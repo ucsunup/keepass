@@ -20,6 +20,7 @@
 package com.android.keepass.timeout;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -80,6 +81,12 @@ public class TimeoutHelper {
         if (App.getDB().Loaded()) {
             Timeout.start(act);
         }
+    }
+
+    public static void clear(Context context) {
+        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.timeout_key), -1);
+        EditorCompat.apply(edit);
     }
 
     public static void checkShutdown(Activity act) {

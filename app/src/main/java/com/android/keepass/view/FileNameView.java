@@ -72,7 +72,7 @@ public class FileNameView extends RelativeLayout {
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    switchView.setImageResource(R.drawable.arrow_down);
+                                    switchView.setImageResource(R.drawable.arrow_down_light);
                                     mShow = false;
                                 }
 
@@ -95,7 +95,7 @@ public class FileNameView extends RelativeLayout {
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    switchView.setImageResource(R.drawable.arrow_up);
+                                    switchView.setImageResource(R.drawable.arrow_up_light);
                                     mShow = true;
                                 }
 

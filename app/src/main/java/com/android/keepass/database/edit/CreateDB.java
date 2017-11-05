@@ -22,6 +22,7 @@ package com.android.keepass.database.edit;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.keepass.Database;
 import com.android.keepass.app.App;

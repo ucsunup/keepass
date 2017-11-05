@@ -23,6 +23,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.android.keepass.R;
@@ -36,7 +37,6 @@ public class GroupHeaderView extends RelativeLayout {
 
     public GroupHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         inflate(context);
     }
 

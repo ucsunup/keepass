@@ -37,94 +37,88 @@ import com.android.keepass.database.edit.OnFinish;
 import com.android.keepass.database.edit.SaveDB;
 
 public class RoundsPreference extends DialogPreference {
-	
-	private PwDatabase mPM;
-	private TextView mRoundsView;
 
-	@Override
-	protected View onCreateDialogView() {
-		View view =  super.onCreateDialogView();
-		
-		mRoundsView = (TextView) view.findViewById(R.id.rounds);
-		
-		Database db = App.getDB();
-		mPM = db.pm;
-		long numRounds = mPM.getNumRounds();
-		mRoundsView.setText(Long.toString(numRounds));
-		
-		return view;
-	}
+    private PwDatabase mPM;
+    private TextView mRoundsView;
 
-	public RoundsPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    @Override
+    protected View onCreateDialogView() {
+        View view = super.onCreateDialogView();
 
-	public RoundsPreference(Context context, AttributeSet attrs, int defStyle) {
-	   super(context, attrs, defStyle);
-   }
+        mRoundsView = view.findViewById(R.id.rounds);
 
-	@Override
-	protected void onDialogClosed(boolean positiveResult) {
-		super.onDialogClosed(positiveResult);
+        Database db = App.getDB();
+        mPM = db.pm;
+        long numRounds = mPM.getNumRounds();
+        mRoundsView.setText(Long.toString(numRounds));
 
-		if ( positiveResult ) {
-			int rounds;
-			
-			try {
-				String strRounds = mRoundsView.getText().toString(); 
-				rounds = Integer.parseInt(strRounds);
-			} catch (NumberFormatException e) {
-				Toast.makeText(getContext(), R.string.error_rounds_not_number, Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			if ( rounds < 1 ) {
-				rounds = 1;
-			}
-			
-			long oldRounds = mPM.getNumRounds();
-			try {
-				mPM.setNumRounds(rounds);
-			} catch (NumberFormatException e) {
-				Toast.makeText(getContext(), R.string.error_rounds_too_large, Toast.LENGTH_LONG).show();
-				mPM.setNumRounds(Integer.MAX_VALUE);
-			}
-			
-			Handler handler = new Handler();
-			SaveDB save = new SaveDB(getContext(), App.getDB(), new AfterSave(getContext(), handler, oldRounds));
-			ProgressTask pt = new ProgressTask(getContext(), save, R.string.saving_database);
-			pt.run();
-			
-		}
+        return view;
+    }
 
-	}
-	
-	private class AfterSave extends OnFinish {
-		private long mOldRounds;
-		private Context mCtx;
-		
-		public AfterSave(Context ctx, Handler handler, long oldRounds) {
-			super(handler);
-			
-			mCtx = ctx;
-			mOldRounds = oldRounds;
-		}
+    public RoundsPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-		@Override
-		public void run() {
-			if ( mSuccess ) {
-				OnPreferenceChangeListener listner = getOnPreferenceChangeListener();
-				if ( listner != null ) {
-					listner.onPreferenceChange(RoundsPreference.this, null);
-				}
-			} else {
-				displayMessage(mCtx);
-				mPM.setNumRounds(mOldRounds);
-			}
-			
-			super.run();
-		}
-		
-	}
+    public RoundsPreference(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
+    @Override
+    protected void onDialogClosed(boolean positiveResult) {
+        super.onDialogClosed(positiveResult);
+
+        if (positiveResult) {
+            int rounds;
+
+            try {
+                String strRounds = mRoundsView.getText().toString();
+                rounds = Integer.parseInt(strRounds);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), R.string.error_rounds_not_number, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (rounds < 1) {
+                rounds = 1;
+            }
+
+            long oldRounds = mPM.getNumRounds();
+            try {
+                mPM.setNumRounds(rounds);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), R.string.error_rounds_too_large, Toast.LENGTH_LONG).show();
+                mPM.setNumRounds(Integer.MAX_VALUE);
+            }
+
+            Handler handler = new Handler();
+            SaveDB save = new SaveDB(getContext(), App.getDB(), new AfterSave(getContext(), handler, oldRounds));
+            ProgressTask pt = new ProgressTask(getContext(), save, R.string.saving_database);
+            pt.run();
+        }
+    }
+
+    private class AfterSave extends OnFinish {
+        private long mOldRounds;
+        private Context mCtx;
+
+        public AfterSave(Context ctx, Handler handler, long oldRounds) {
+            super(handler);
+            mCtx = ctx;
+            mOldRounds = oldRounds;
+        }
+
+        @Override
+        public void run() {
+            if (mSuccess) {
+                OnPreferenceChangeListener listner = getOnPreferenceChangeListener();
+                if (listner != null) {
+                    listner.onPreferenceChange(RoundsPreference.this, null);
+                }
+            } else {
+                displayMessage(mCtx);
+                mPM.setNumRounds(mOldRounds);
+            }
+            super.run();
+        }
+    }
 }

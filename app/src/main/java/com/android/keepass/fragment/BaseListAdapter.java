@@ -1,6 +1,7 @@
 package com.android.keepass.fragment;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class BaseListAdapter extends CardListAdapter<BaseListAdapter.BaseViewHol
         public BaseViewHolder(View itemView, CardListAdapter.OnClickListener onClickListener,
                               CardListAdapter.OnLongClickListener onLongClickListener) {
             super(itemView);
-            mContent = (TextView) itemView.findViewById(R.id.content);
+            mContent = itemView.findViewById(R.id.content);
             mOnClickListener = onClickListener;
             mOnLongClickListener = onLongClickListener;
             itemView.setOnClickListener(this);

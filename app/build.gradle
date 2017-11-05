@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion = 24
-    buildToolsVersion = "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.android.keepass"
         minSdkVersion 19
-        targetSdkVersion 24
+        targetSdkVersion 26
         versionCode 160
         versionName "1.0.0.0"
 
-        testApplicationId = "com.android.keepass.tests"
-        testInstrumentationRunner = "android.test.InstrumentationTestRunner"
+        testApplicationId "com.android.keepass.tests"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
 
         /*
         buildConfigFields.with {
@@ -33,14 +33,17 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
+    flavorDimensions "free"
+
     productFlavors {
         flavor1 {
-            applicationId = "com.android.keepass"
+            applicationId "com.android.keepass"
+            dimension "free"
         }
     }
 }
@@ -51,10 +54,10 @@ dependencies {
     compile 'com.madgag.spongycastle:core:1.54.0.0'
     compile 'com.madgag.spongycastle:prov:1.54.0.0'
     compile 'joda-time:joda-time:2.9.4'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:design:26.+'
+    compile 'com.android.support:recyclerview-v7:26.+'
+    compile 'com.android.support:cardview-v7:26.+'
 
     // Third library
     compile 'com.github.clans:fab:1.6.4'

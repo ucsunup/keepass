@@ -34,7 +34,6 @@ public class EntryContentsView extends LinearLayout {
 
     public EntryContentsView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         inflate(context);
     }
 

@@ -61,13 +61,11 @@ public class AppSettingsActivity extends LockingClosePreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         initPreference();
         backupManager = new BackupManagerCompat(this);
-
     }
 
     @Override
     protected void onStop() {
         backupManager.dataChanged();
-
         super.onStop();
     }
 
@@ -102,6 +100,7 @@ public class AppSettingsActivity extends LockingClosePreferenceActivity {
             if (db.Loaded() && db.pm.appSettingsEnabled()) {
                 Preference rounds = findPreference(getString(R.string.rounds_key));
                 rounds.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                    @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         setRounds(App.getDB(), preference);
                         return true;
@@ -157,9 +156,6 @@ public class AppSettingsActivity extends LockingClosePreferenceActivity {
         } else {
             resId = R.string.twofish;
         }
-
         algorithm.setSummary(resId);
     }
-
-
 }

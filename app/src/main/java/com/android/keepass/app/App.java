@@ -19,13 +19,16 @@
  */
 package com.android.keepass.app;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.android.keepass.Database;
 import com.android.keepass.compat.PRNGFixes;
 import com.android.keepass.fileselect.RecentFileHistory;
+import com.android.keepass.timeout.TimeoutHelper;
 
 public class App extends Application {
     private static Database db = null;
@@ -70,6 +73,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // start app, then clear last timeout recorder.
+        TimeoutHelper.clear(this);
+
         mFileHistory = new RecentFileHistory(this);
         PRNGFixes.apply();
     }

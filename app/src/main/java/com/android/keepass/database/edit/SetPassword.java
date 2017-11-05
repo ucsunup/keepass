@@ -47,7 +47,6 @@ public class SetPassword extends RunnableOnFinish {
 
     public SetPassword(Context ctx, Database db, String password, Uri keyfile, OnFinish finish, boolean dontSave) {
         super(finish);
-
         mDb = db;
         mPassword = password;
         mKeyfile = keyfile;
@@ -97,7 +96,6 @@ public class SetPassword extends RunnableOnFinish {
 
         public AfterSave(byte[] backup, OnFinish finish) {
             super(finish);
-
             mBackup = backup;
         }
 
@@ -108,7 +106,6 @@ public class SetPassword extends RunnableOnFinish {
                 erase(mDb.pm.masterKey);
                 mDb.pm.masterKey = mBackup;
             }
-
             super.run();
         }
 
@@ -120,11 +117,12 @@ public class SetPassword extends RunnableOnFinish {
      * @param array
      */
     private void erase(byte[] array) {
-        if (array == null) return;
+        if (array == null) {
+            return;
+        }
 
         for (int i = 0; i < array.length; i++) {
             array[i] = 0;
         }
     }
-
 }

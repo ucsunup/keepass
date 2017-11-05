@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,21 +57,16 @@ public class PwGroupView extends ClickView {
     protected PwGroupView(GroupBaseActivity act, PwGroup pw) {
         super(act);
         mAct = act;
-
-        View gv = View.inflate(act, R.layout.group_list_entry, null);
-
+        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(lp);
+        View gv = View.inflate(act, R.layout.group_list_entry, this);
         mTv = (TextView) gv.findViewById(R.id.group_text);
         float size = PrefsUtil.getListTextSize(act);
         mTv.setTextSize(size);
 
-        TextView label = (TextView) gv.findViewById(R.id.group_label);
-        label.setTextSize(size - 8);
-
-        populateView(gv, pw);
-
-        LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-
-        addView(gv, lp);
+        if (pw != null) {
+            populateView(gv, pw);
+        }
     }
 
     private void populateView(View gv, PwGroup pw) {
@@ -86,6 +82,7 @@ public class PwGroupView extends ClickView {
         populateView(this, pw);
     }
 
+    @Override
     public void onClick() {
         launchGroup();
     }

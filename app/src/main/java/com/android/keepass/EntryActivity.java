@@ -21,7 +21,10 @@
 package com.android.keepass;
 
 import java.text.DateFormat;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -41,12 +44,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -60,7 +66,9 @@ import com.android.keepass.compat.ActivityCompat;
 import com.android.keepass.database.PwDatabase;
 import com.android.keepass.database.PwEntry;
 import com.android.keepass.database.PwEntryV4;
+import com.android.keepass.database.PwIconStandard;
 import com.android.keepass.database.exception.SamsungClipboardException;
+import com.android.keepass.fragment.DetailListAdapter;
 import com.android.keepass.utils.Intents;
 import com.android.keepass.utils.EmptyUtils;
 import com.android.keepass.utils.Types;
@@ -95,6 +103,8 @@ public class EntryActivity extends LockCloseHideActivity {
     private NotificationManager mNM;
     private BroadcastReceiver mIntentReceiver;
     protected boolean readOnly = false;
+    protected RecyclerView mRecyclerView;
+    protected DetailListAdapter mListAdapter;
 
     private DateFormat dateFormat;
     private DateFormat timeFormat;
@@ -104,9 +114,10 @@ public class EntryActivity extends LockCloseHideActivity {
     }
 
     protected void setupEditButtons() {
-        Button edit = (Button) findViewById(R.id.entry_edit);
+        FloatingActionButton edit = (FloatingActionButton) findViewById(R.id.entry_edit);
         edit.setOnClickListener(new View.OnClickListener() {
 
+            @Override
             public void onClick(View v) {
                 EntryEditActivity.Launch(EntryActivity.this, mEntry);
             }
@@ -125,6 +136,7 @@ public class EntryActivity extends LockCloseHideActivity {
 
         super.onCreate(savedInstanceState);
         setEntryView();
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         Context appCtx = getApplicationContext();
         dateFormat = android.text.format.DateFormat.getDateFormat(appCtx);
@@ -242,36 +254,38 @@ public class EntryActivity extends LockCloseHideActivity {
     }
 
     protected void fillData(boolean trimList) {
-        ImageView iv = (ImageView) findViewById(R.id.entry_icon);
         Database db = App.getDB();
-        db.drawFactory.assignDrawableTo(iv, getResources(), mEntry.getIcon());
-
         PwDatabase pm = db.pm;
 
-        populateText(R.id.entry_title, mEntry.getTitle(true, pm));
-        populateText(R.id.entry_user_name, mEntry.getUsername(true, pm));
+        getSupportActionBar().setTitle(mEntry.getTitle(true, pm));
+        getSupportActionBar().setIcon(db.drawFactory.getIconDrawable(getResources(),
+                mEntry.getIcon() instanceof PwIconStandard ? (PwIconStandard) mEntry.getIcon() : (PwIconStandard) mEntry.getIcon()));
 
-        populateText(R.id.entry_url, mEntry.getUrl(true, pm));
-        populateText(R.id.entry_password, mEntry.getPassword(true, pm));
-        setPasswordStyle();
+        // wrap data
+        ArrayList<Map.Entry<String, String>> data = new ArrayList<>();
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_user_name), mEntry.getUsername(true, pm)));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_url), mEntry.getUrl(true, pm)));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_password), mEntry.getPassword(true, pm)));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_comment), mEntry.getNotes(true, pm)));
 
-        populateText(R.id.entry_created, getDateTime(mEntry.getCreationTime()));
-        populateText(R.id.entry_modified, getDateTime(mEntry.getLastModificationTime()));
-        populateText(R.id.entry_accessed, getDateTime(mEntry.getLastAccessTime()));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_created), getDateTime(mEntry.getCreationTime())));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_modified), getDateTime(mEntry.getLastModificationTime())));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_accessed), getDateTime(mEntry.getLastAccessTime())));
+        data.add(new AbstractMap.SimpleEntry(getString(R.string.entry_expires), mEntry.expires() ?
+                getDateTime(mEntry.getExpiryTime()) : getString(R.string.never)));
 
-        Date expires = mEntry.getExpiryTime();
-        if (mEntry.expires()) {
-            populateText(R.id.entry_expires, getDateTime(expires));
+
+        if (mListAdapter == null) {
+            mListAdapter = new DetailListAdapter(this, data);
         } else {
-            populateText(R.id.entry_expires, R.string.never);
+            mListAdapter.refreshData(data);
         }
-        populateText(R.id.entry_comment, mEntry.getNotes(true, pm));
-
-    }
-
-    private void populateText(int viewId, int resId) {
-        TextView tv = (TextView) findViewById(viewId);
-        tv.setText(resId);
+        if (mRecyclerView == null) {
+            mRecyclerView = (RecyclerView) findViewById(R.id.entry_recylerview);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
+        mRecyclerView.setAdapter(mListAdapter);
     }
 
     private void populateText(int viewId, String text) {
@@ -296,8 +310,7 @@ public class EntryActivity extends LockCloseHideActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.entry, menu);
+        getMenuInflater().inflate(R.menu.entry, menu);
 
         MenuItem togglePassword = menu.findItem(R.id.menu_toggle_pass);
         if (mShowPassword) {
@@ -335,16 +348,6 @@ public class EntryActivity extends LockCloseHideActivity {
         return true;
     }
 
-    private void setPasswordStyle() {
-        TextView password = (TextView) findViewById(R.id.entry_password);
-
-        if (mShowPassword) {
-            password.setTransformationMethod(null);
-        } else {
-            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -365,7 +368,7 @@ public class EntryActivity extends LockCloseHideActivity {
                     item.setTitle(R.string.menu_hide_password);
                     mShowPassword = true;
                 }
-                setPasswordStyle();
+                mListAdapter.showPassword(mShowPassword);
 
                 return true;
 

@@ -17,25 +17,42 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/entry_table"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <!-- Username -->
-    <TextView
-        android:id="@+id/entry_user_name_label"
-        style="@style/WhiteOnDarkSmall"
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/entry_user_name" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="8dp">
 
-    <com.android.keepass.view.TextViewSelect
-        android:id="@+id/entry_user_name"
-        style="@style/EntryItem"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
-    <View style="@style/Divider" />
+            <TextView
+                android:id="@+id/entry_user_name_label"
+                style="@style/WhiteOnDarkSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/entry_user_name" />
+
+            <com.android.keepass.view.TextViewSelect
+                android:id="@+id/entry_user_name"
+                style="@style/EntryItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     <!--  URL -->
     <TextView
         android:id="@+id/entry_url_label"

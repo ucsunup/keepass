@@ -28,9 +28,9 @@ public class AnimatorUtils {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (!show) {
-                    ((ImageButton) switchView).setImageResource(R.drawable.arrow_down);
+                    ((ImageButton) switchView).setImageResource(R.drawable.arrow_down_light);
                 } else {
-                    ((ImageButton) switchView).setImageResource(R.drawable.arrow_up);
+                    ((ImageButton) switchView).setImageResource(R.drawable.arrow_up_light);
                 }
                 switchView.setEnabled(true);
             }

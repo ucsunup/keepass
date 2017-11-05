@@ -47,17 +47,18 @@ public class GroupEditActivity extends Activity {
         setContentView(R.layout.group_edit);
         setTitle(R.string.add_group_title);
 
-        ImageButton iconButton = (ImageButton) findViewById(R.id.icon_button);
+        ImageButton iconButton = findViewById(R.id.icon_button);
         iconButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 IconPickerActivity.Launch(GroupEditActivity.this);
             }
         });
 
-        Button okButton = (Button) findViewById(R.id.ok);
+        Button okButton = findViewById(R.id.ok);
         okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                TextView nameField = (TextView) findViewById(R.id.group_name);
+                TextView nameField = findViewById(R.id.group_name);
                 String name = nameField.getText().toString();
 
                 if (name.length() > 0) {
@@ -74,12 +75,11 @@ public class GroupEditActivity extends Activity {
             }
         });
 
-        Button cancel = (Button) findViewById(R.id.cancel);
+        Button cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final Intent intent = new Intent();
                 setResult(Activity.RESULT_CANCELED, intent);
-
                 finish();
             }
         });
@@ -90,7 +90,7 @@ public class GroupEditActivity extends Activity {
         switch (resultCode) {
             case EntryEditActivity.RESULT_OK_ICON_PICKER:
                 mSelectedIconID = data.getExtras().getInt(IconPickerActivity.KEY_ICON_ID);
-                ImageButton currIconButton = (ImageButton) findViewById(R.id.icon_button);
+                ImageButton currIconButton = findViewById(R.id.icon_button);
                 currIconButton.setImageResource(Icons.iconToResId(mSelectedIconID));
                 break;
 

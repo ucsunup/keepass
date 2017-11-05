@@ -70,19 +70,23 @@ public class IconPickerActivity extends LockCloseActivity {
             mContext = c;
         }
 
+        @Override
         public int getCount() {
            /* Return number of KeePass icons */
             return Icons.count();
         }
 
+        @Override
         public Object getItem(int position) {
             return null;
         }
 
+        @Override
         public long getItemId(int position) {
             return 0;
         }
 
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View currView;
             if (convertView == null) {
@@ -92,9 +96,9 @@ public class IconPickerActivity extends LockCloseActivity {
                 currView = convertView;
             }
 
-            TextView tv = (TextView) currView.findViewById(R.id.icon_text);
+            TextView tv = currView.findViewById(R.id.icon_text);
             tv.setText("" + position);
-            ImageView iv = (ImageView) currView.findViewById(R.id.icon_image);
+            ImageView iv = currView.findViewById(R.id.icon_image);
             iv.setImageResource(Icons.iconToResId(position));
 
             return currView;

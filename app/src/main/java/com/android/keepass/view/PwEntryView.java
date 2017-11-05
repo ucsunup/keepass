@@ -26,6 +26,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,17 +56,15 @@ public class PwEntryView extends ClickView {
     protected PwEntryView(GroupBaseActivity act, PwEntry pw, int pos) {
         super(act);
         mAct = act;
-
-        View ev = View.inflate(mAct, R.layout.entry_list_entry, null);
+        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(lp);
+        View ev = View.inflate(mAct, R.layout.entry_list_entry, this);
         mTv = (TextView) ev.findViewById(R.id.entry_text);
         mTv.setTextSize(PrefsUtil.getListTextSize(act));
 
-        populateView(ev, pw, pos);
-
-        LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-
-        addView(ev, lp);
-
+        if (pw != null) {
+            populateView(ev, pw, pos);
+        }
     }
 
     private void populateView(View ev, PwEntry pw, int pos) {
@@ -114,7 +113,6 @@ public class PwEntryView extends ClickView {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case MENU_OPEN:
                 launchEntry();
                 return true;
@@ -125,6 +123,4 @@ public class PwEntryView extends ClickView {
                 return false;
         }
     }
-
-
 }

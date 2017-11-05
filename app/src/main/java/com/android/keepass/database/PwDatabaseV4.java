@@ -19,7 +19,6 @@
  */
 package com.android.keepass.database;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -35,7 +34,6 @@ import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.spongycastle.crypto.engines.AESEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,12 +45,9 @@ import android.webkit.URLUtil;
 import biz.source_code.base64Coder.Base64Coder;
 
 import com.android.keepass.collections.VariantDictionary;
-import com.android.keepass.crypto.CipherFactory;
 import com.android.keepass.crypto.CryptoUtil;
-import com.android.keepass.crypto.PwStreamCipherFactory;
 import com.android.keepass.crypto.engine.AesEngine;
 import com.android.keepass.crypto.engine.CipherEngine;
-import com.android.keepass.crypto.keyDerivation.AesKdf;
 import com.android.keepass.crypto.keyDerivation.KdfEngine;
 import com.android.keepass.crypto.keyDerivation.KdfFactory;
 import com.android.keepass.crypto.keyDerivation.KdfParameters;
@@ -307,7 +302,9 @@ public class PwDatabaseV4 extends PwDatabase {
         while (true) {
             id = new PwGroupIdV4(UUID.randomUUID());
 
-            if (!isGroupIdUsed(id)) break;
+            if (!isGroupIdUsed(id)) {
+                break;
+            }
         }
 
         return id;

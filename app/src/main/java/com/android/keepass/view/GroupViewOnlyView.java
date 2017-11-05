@@ -22,7 +22,6 @@ package com.android.keepass.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.android.keepass.R;
@@ -36,7 +35,6 @@ public class GroupViewOnlyView extends RelativeLayout {
 
     public GroupViewOnlyView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         inflate(context);
     }
 
@@ -45,12 +43,8 @@ public class GroupViewOnlyView extends RelativeLayout {
         inflater.inflate(R.layout.group_add_entry, this);
 
         // Hide the buttons
-        FloatingActionMenu menu_group = (FloatingActionMenu) findViewById(R.id.menu_group);
+        FloatingActionMenu menu_group = findViewById(R.id.menu_group);
         menu_group.removeAllMenuButtons();
         menu_group.hideMenu(true);
-
-        View list = findViewById(R.id.group_list);
-        LayoutParams lp = (RelativeLayout.LayoutParams) list.getLayoutParams();
-        lp.addRule(ALIGN_PARENT_BOTTOM, TRUE);
     }
 }

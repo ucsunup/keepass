@@ -57,9 +57,8 @@ public class EntrySection extends LinearLayout {
 
     private void setText(int resId, String str) {
         if (str != null) {
-            TextView tvTitle = (TextView) findViewById(resId);
+            TextView tvTitle = findViewById(resId);
             tvTitle.setText(str);
         }
-
     }
 }

@@ -30,7 +30,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -153,7 +152,6 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        Log.d("heihei", "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.fileselect, menu);
         return true;
@@ -194,7 +192,6 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void setPwdForNewDatabase(String fileName, String keyFile) {
         // TODO: goto FillUsrPwdFragment for setting
-        Log.d("heihei", "setPwdForNewDatabase: fileName = " + fileName + ", keyFile = " + keyFile);
         showFillUsrPwdFragment(true, fileName, keyFile, false);
     }
 

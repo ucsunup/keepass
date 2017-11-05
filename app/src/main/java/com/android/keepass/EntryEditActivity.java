@@ -57,6 +57,9 @@ import com.android.keepass.database.edit.RunnableOnFinish;
 import com.android.keepass.database.edit.UpdateEntry;
 import com.android.keepass.icons.Icons;
 import com.android.keepass.utils.Types;
+import com.android.keepass.utils.ViewUtils;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 public abstract class EntryEditActivity extends LockCloseHideActivity {
     public static final String KEY_ENTRY = "entry";
@@ -159,20 +162,13 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
             }
         });
 
-        // Generate password button
-        Button generatePassword = (Button) findViewById(R.id.generate_button);
-        generatePassword.setOnClickListener(new OnClickListener() {
-
+        // init menu button
+        final FloatingActionMenu editMenu = (FloatingActionMenu) findViewById(R.id.menu_group);
+        FloatingActionButton saveBtn = (FloatingActionButton) findViewById(R.id.fab_submenu_entry_save);
+        saveBtn.setOnClickListener(new OnClickListener() {
+            @Override
             public void onClick(View v) {
-                GeneratePasswordActivity.Launch(EntryEditActivity.this);
-            }
-        });
-
-        // Save button
-        Button save = (Button) findViewById(R.id.entry_save);
-        save.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
+                editMenu.close(true);
                 EntryEditActivity act = EntryEditActivity.this;
 
                 if (!validateBeforeSaving()) {
@@ -198,18 +194,14 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
                 ProgressTask pt = new ProgressTask(act, task, R.string.saving_database);
                 pt.run();
             }
-
         });
-
-        // Cancel button
-        Button cancel = (Button) findViewById(R.id.entry_cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-
+        FloatingActionButton cancelBtn = (FloatingActionButton) findViewById(R.id.fab_submenu_entry_cancel);
+        cancelBtn.setOnClickListener(new OnClickListener() {
+            @Override
             public void onClick(View v) {
+                editMenu.close(true);
                 finish();
-
             }
-
         });
 
         // Respect mask password setting
@@ -220,6 +212,16 @@ public abstract class EntryEditActivity extends LockCloseHideActivity {
             pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
             conf.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         }
+        // Generate password button
+        ViewUtils.updateToogleView(this,
+                (TextInputLayout) findViewById(R.id.entry_password),
+                R.drawable.arrow_right_light,
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneratePasswordActivity.Launch(EntryEditActivity.this);
+                    }
+                });
 
         mTitle = ((TextInputLayout) findViewById(R.id.entry_title)).getEditText();
         mUrl = ((TextInputLayout) findViewById(R.id.entry_url)).getEditText();

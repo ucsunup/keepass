@@ -26,16 +26,14 @@ import com.android.keepass.timeout.TimeoutHelper;
 public abstract class LockingPreferenceActivity extends PreferenceActivity {
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        TimeoutHelper.pause(this);
+    protected void onResume() {
+        super.onResume();
+        TimeoutHelper.resume(this);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        TimeoutHelper.resume(this);
+    protected void onPause() {
+        super.onPause();
+        TimeoutHelper.pause(this);
     }
 }

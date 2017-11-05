@@ -19,12 +19,10 @@
  */
 package com.android.keepass.database;
 
-import java.io.BufferedInputStream;
+import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -35,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import android.os.DropBoxManager.Entry;
 
 import com.android.keepass.crypto.finalkey.FinalKey;
 import com.android.keepass.crypto.finalkey.FinalKeyFactory;

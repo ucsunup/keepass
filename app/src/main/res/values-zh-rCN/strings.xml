@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009 Brian Pellin.
-     
+
  This file is part of KeePass.
 
   KeePass is free software: you can redistribute it and/or modify
@@ -51,21 +51,21 @@
     <string name="digits">数字</string>
     <string name="disclaimer_formal">KeePass版权归Brian Pellin；软件不带有绝对担保；是自由软件，您可在遵循GPL 2或者更高版本的情况下重新发布。中文简繁体翻译：wangkf@gmail.com</string>
     <string name="ellipsis">\u2026</string>
-    <string name="enter_filename">输入数据库名：</string>
-    <string name="entry_accessed">访问时间：</string>
+    <string name="enter_filename">输入数据库名</string>
+    <string name="entry_accessed">访问时间</string>
     <string name="entry_and_or">输入密码和/或一个密钥文件来解锁你的数据库：</string>
     <string name="entry_cancel">取消</string>
-    <string name="entry_comment">备注：</string>
+    <string name="entry_comment">备注</string>
     <string name="entry_confpassword">确认密码：</string>
-    <string name="entry_created">创建：</string>
-    <string name="entry_expires">失效时间：</string>
+    <string name="entry_created">创建</string>
+    <string name="entry_expires">失效时间</string>
     <string name="entry_keyfile">密钥文件（可选）</string>
-    <string name="entry_modified">修改时间：: </string>
-    <string name="entry_password">密码：</string>
+    <string name="entry_modified">修改时间</string>
+    <string name="entry_password">密码</string>
     <string name="entry_save">保存</string>
-    <string name="entry_title">名称：</string>
-    <string name="entry_url">网址：</string>
-    <string name="entry_user_name">用户名：</string>
+    <string name="entry_title">名称</string>
+    <string name="entry_url">网址</string>
+    <string name="entry_user_name">用户名</string>
     <string name="error_arc4">ArcFour流密码不被支持。</string>
     <string name="error_can_not_handle_uri">KeePass无法处理此URI。</string>
     <string name="error_could_not_create_group">创建群组错误。</string>
@@ -138,6 +138,8 @@
     <string name="no_results">没有搜索结果</string>
     <string name="no_url_handler">没有这个链接的处理程序。</string>
     <string name="open_recent">最近使用数据库</string>
+    <string name="omitbackup_title">不要搜索备份条目</string>
+    <string name="omitbackup_summary">忽略搜索结果中的“备份”组（仅适用于".kdb"文件）</string>
     <string name="pass_filename">KeePass数据库文件名：</string>
     <string name="password_title">输入数据库密码</string>
     <string name="progress_create">创建新数据库中&#8230;</string>
@@ -164,10 +166,13 @@
     <string name="sort_db">数据库的排序顺序</string>
     <string name="special">特别</string>
     <string name="search_hint">条目名称/说明</string>
+    <string name="search_results">搜索结果</string>
     <string name="twofish">Twofish算法</string>
     <string name="underline">强调</string>
     <string name="unsupported_db_version">不支持的数据库版本。</string>
     <string name="uppercase">大写</string>
+    <string name="use_saf_title">存储访问框架</string>
+    <string name="use_saf_summary">使用Android存储访问框架进行文件浏览（KitKat及更高版本）</string>
     <string name="warning_read_only">你的SD卡目前是只读状态。您可能无法将更改保存到数据库。</string>
     <string name="warning_unmounted">你的SD卡目前尚未安装在您的设备上。你将无法加载或创建您的数据库。</string>
 

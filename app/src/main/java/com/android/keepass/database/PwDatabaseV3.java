@@ -52,7 +52,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import com.android.keepass.database.exception.InvalidKeyFileException;
 

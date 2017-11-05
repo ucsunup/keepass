@@ -17,8 +17,9 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <com.android.keepass.view.EntryEditSection xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/btn_background">
 
     <EditText
         android:id="@+id/title"
@@ -29,6 +30,15 @@
         android:inputType="text"
         android:singleLine="true" />
 
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:onClick="deleteAdvancedString"
+        android:scaleType="centerCrop"
+        android:src="@android:drawable/ic_delete" />
+
     <CheckBox
         android:id="@+id/protection"
         android:layout_width="wrap_content"
@@ -36,21 +46,11 @@
         android:layout_below="@id/title"
         android:text="@string/protection" />
 
-    <ImageButton
-        android:id="@+id/delete"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/title"
-        android:onClick="deleteAdvancedString"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_delete" />
-
     <EditText
         android:id="@+id/value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/delete"
+        android:layout_below="@id/protection"
         android:hint="@string/field_value"
         android:inputType="textMultiLine" />
 

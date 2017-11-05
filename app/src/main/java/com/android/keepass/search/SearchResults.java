@@ -22,7 +22,15 @@ package com.android.keepass.search;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.android.keepass.R;
 import com.android.keepass.app.KeePass;
 import com.android.keepass.Database;
 import com.android.keepass.GroupBaseActivity;
@@ -32,6 +40,8 @@ import com.android.keepass.database.PwGroup;
 import com.android.keepass.view.GroupEmptyView;
 import com.android.keepass.view.GroupViewOnlyView;
 
+import java.lang.reflect.Field;
+
 public class SearchResults extends GroupBaseActivity {
 
     private Database mDb;
@@ -40,7 +50,6 @@ public class SearchResults extends GroupBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (isFinishing()) {
             return;
         }
@@ -48,14 +57,17 @@ public class SearchResults extends GroupBaseActivity {
         setResult(KeePass.EXIT_NORMAL);
 
         mDb = App.getDB();
-
         // Likely the app has been killed exit the activity
         if (!mDb.Loaded()) {
             finish();
         }
-
         performSearch(getSearchStr(getIntent()));
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        performSearch(getSearchStr(intent));
     }
 
     @Override
@@ -75,14 +87,24 @@ public class SearchResults extends GroupBaseActivity {
         } else {
             setContentView(new GroupViewOnlyView(this));
         }
+        // init ToolBar, and make AppBarLayout height == 2 * Toolbar.Height
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        appBarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams lp = appBarLayout.getLayoutParams();
+                lp.height = 2 * getSupportActionBar().getHeight();
+                appBarLayout.setLayoutParams(lp);
+            }
+        });
 
         setGroupTitle();
-
-        setListAdapter(new PwGroupListAdapter(this, mGroup));
+        setListAdapter(new PwGroupListAdapter(this, mGroup, null));
     }
 
 	/*
-	@Override
+    @Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		
@@ -99,9 +121,14 @@ public class SearchResults extends GroupBaseActivity {
         if (Intent.ACTION_SEARCH.equals(queryAction)) {
             return queryIntent.getStringExtra(SearchManager.QUERY);
         }
-
         return "";
-
     }
 
+    @Override
+    protected void setGroupTitle() {
+        findViewById(R.id.group_name).setVisibility(View.INVISIBLE);
+        if (mGroup != null) {
+            getSupportActionBar().setTitle(mGroup.getName());
+        }
+    }
 }

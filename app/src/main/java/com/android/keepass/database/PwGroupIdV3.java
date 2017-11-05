@@ -46,6 +46,4 @@ public class PwGroupIdV3 extends PwGroupId {
     public int getId() {
         return id;
     }
-
-
 }

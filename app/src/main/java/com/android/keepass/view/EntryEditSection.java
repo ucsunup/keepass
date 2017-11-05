@@ -68,15 +68,14 @@ public class EntryEditSection extends RelativeLayout {
         setText(R.id.title, title);
         setText(R.id.value, value.toString());
 
-        CheckBox cb = (CheckBox) findViewById(R.id.protection);
+        CheckBox cb = findViewById(R.id.protection);
         cb.setChecked(value.isProtected());
     }
 
     private void setText(int resId, String str) {
         if (str != null) {
-            TextView tvTitle = (TextView) findViewById(resId);
+            TextView tvTitle = findViewById(resId);
             tvTitle.setText(str);
         }
-
     }
 }

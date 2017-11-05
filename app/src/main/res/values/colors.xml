@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2009 Brian Pellin.
      
  This file is part of KeePassDroid.
@@ -18,9 +17,19 @@
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-	<color name="blue_highlight">#0000dd</color>
-	<color name="group">#ffffff</color>
-	<color name="icon_background">#555555</color>
-	<color name="icon_text">#000000</color>
-	<color name="group_header_background">#888888</color>
+    <color name="blue_highlight">#0000dd</color>
+    <color name="group">#ffffff</color>
+    <color name="icon_background">#555555</color>
+    <color name="icon_text">#000000</color>
+    <color name="group_header_background">#888888</color>
+    <color name="colorPrimary">#FF1A1A1A</color>
+    <color name="colorPrimaryDark">#1F1F1F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="fab_background_normal">#e66352</color>
+    <color name="fab_background_press">#d81e06</color>
+    <color name="fab_sub_background_normal">#ed988d</color>
+    <color name="fab_sub_background_press">#e66352</color>
+
+    <color name="btn_background">#4d4b4b</color>
 </resources>    

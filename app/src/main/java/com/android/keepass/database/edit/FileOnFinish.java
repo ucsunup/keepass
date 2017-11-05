@@ -20,14 +20,17 @@
 package com.android.keepass.database.edit;
 
 import android.net.Uri;
+import android.os.Handler;
 
 public class FileOnFinish extends OnFinish {
     private Uri mFilename = null;
-    protected FileOnFinish mOnFinish;
 
     public FileOnFinish(FileOnFinish finish) {
         super(finish);
-        mOnFinish = finish;
+    }
+
+    public FileOnFinish(FileOnFinish finish, Handler handler) {
+        super(finish, handler);
     }
 
     public void setFilename(Uri filename) {

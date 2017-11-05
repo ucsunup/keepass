@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.android.keepass.app.KeePass;
 import com.android.keepass.password.PasswordGenerator;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 public class GeneratePasswordActivity extends LockCloseActivity {
     private static final int[] BUTTON_IDS = new int[]{R.id.btn_length6, R.id.btn_length8, R.id.btn_length12, R.id.btn_length16};
@@ -61,34 +63,34 @@ public class GeneratePasswordActivity extends LockCloseActivity {
             button.setOnClickListener(lengthButtonsListener);
         }
 
-        Button genPassButton = (Button) findViewById(R.id.generate_password_button);
+        // init menu button
+        final FloatingActionMenu editMenu = (FloatingActionMenu) findViewById(R.id.menu_group);
+        FloatingActionButton genPassButton = (FloatingActionButton) findViewById(R.id.fab_submenu_generate_password_button);
         genPassButton.setOnClickListener(new OnClickListener() {
+            @Override
             public void onClick(View v) {
                 fillPassword();
             }
         });
-
-        Button acceptButton = (Button) findViewById(R.id.accept_button);
+        FloatingActionButton acceptButton = (FloatingActionButton) findViewById(R.id.fab_submenu_accept_button);
         acceptButton.setOnClickListener(new OnClickListener() {
-
+            @Override
             public void onClick(View v) {
+                editMenu.close(true);
                 EditText password = (EditText) findViewById(R.id.password);
-
                 Intent intent = new Intent();
                 intent.putExtra("com.android.keepass.password.generated_password", password.getText().toString());
-
                 setResult(EntryEditActivity.RESULT_OK_PASSWORD_GENERATOR, intent);
-
                 finish();
             }
         });
-
-        Button cancelButton = (Button) findViewById(R.id.cancel_button);
+        FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.fab_submenu_cancel_button);
         cancelButton.setOnClickListener(new OnClickListener() {
 
+            @Override
             public void onClick(View v) {
+                editMenu.close(true);
                 setResult(RESULT_CANCELED);
-
                 finish();
             }
         });
