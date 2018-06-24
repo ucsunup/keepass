@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/entry_url">
 
-                <com.android.keepass.view.PasswordEditText
+                <com.ucsunup.keepass.view.PasswordEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_pass"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/entry_password">
 
-                <com.android.keepass.view.PasswordEditText
+                <com.ucsunup.keepass.view.PasswordEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_conf_pass"

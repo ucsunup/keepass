@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/entry_user_name" />
 
-            <com.android.keepass.view.TextViewSelect
+            <com.ucsunup.keepass.view.TextViewSelect
                 android:id="@+id/entry_user_name"
                 style="@style/EntryItem"
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:text="@string/entry_url" />
 
-    <com.android.keepass.view.TextViewSelect
+    <com.ucsunup.keepass.view.TextViewSelect
         android:id="@+id/entry_url"
         style="@style/EntryItem"
         android:layout_width="fill_parent"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:text="@string/entry_password" />
 
-    <com.android.keepass.view.PasswordTextViewSelect
+    <com.ucsunup.keepass.view.PasswordTextViewSelect
         android:id="@+id/entry_password"
         style="@style/EntryItem"
         android:layout_width="fill_parent"
@@ -95,7 +95,7 @@
         android:autoLink="all"
         android:text="@string/entry_comment" />
 
-    <com.android.keepass.view.TextViewSelect
+    <com.ucsunup.keepass.view.TextViewSelect
         android:id="@+id/entry_comment"
         style="@style/EntryItem"
         android:layout_width="fill_parent"

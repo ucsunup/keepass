@@ -38,7 +38,7 @@
             app:expandedTitleGravity="bottom|left"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <com.android.keepass.view.GroupHeaderView
+            <com.ucsunup.keepass.view.GroupHeaderView
                 android:id="@+id/group_header"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"

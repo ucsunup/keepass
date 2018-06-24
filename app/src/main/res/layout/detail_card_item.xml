@@ -27,7 +27,7 @@
             android:text="@string/entry_user_name"
             android:textSize="16sp" />
 
-        <com.android.keepass.view.TextViewSelect
+        <com.ucsunup.keepass.view.TextViewSelect
             android:id="@+id/entry_content"
             style="@style/EntryItem"
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:gravity="right"
             android:textSize="16sp" />
 
-        <com.android.keepass.view.PasswordTextViewSelect
+        <com.ucsunup.keepass.view.PasswordTextViewSelect
             android:id="@+id/entry_password"
             style="@style/EntryItem"
             android:layout_width="wrap_content"

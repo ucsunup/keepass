@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.keepass.fragment.FillUsrPwdFragment">
+    tools:context="com.ucsunup.keepass.fragment.FillUsrPwdFragment">
 
     <TextView
         android:id="@+id/db_name"

@@ -16,7 +16,7 @@
   You should have received a copy of the GNU General Public License
   along with KeePassDroid.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<com.android.keepass.view.EntryEditSection xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ucsunup.keepass.view.EntryEditSection xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/btn_background">
@@ -61,4 +61,4 @@
         android:layout_below="@id/value"
         android:scaleType="fitXY"
         android:src="@android:drawable/divider_horizontal_dark" />
-</com.android.keepass.view.EntryEditSection>
+</com.ucsunup.keepass.view.EntryEditSection>

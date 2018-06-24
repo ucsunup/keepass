@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.keepass.fragment.AdvancedFileSelectFragment">
+    tools:context="com.ucsunup.keepass.fragment.AdvancedFileSelectFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/file_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.android.keepass.view.FileNameView
+    <com.ucsunup.keepass.view.FileNameView
         android:id="@+id/file_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

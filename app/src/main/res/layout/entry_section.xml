@@ -27,7 +27,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <com.android.keepass.view.TextViewSelect
+    <com.ucsunup.keepass.view.TextViewSelect
         android:id="@+id/value"
         style="@style/EntryItem"
         android:layout_width="fill_parent"

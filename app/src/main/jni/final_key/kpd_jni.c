@@ -119,7 +119,7 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_android_keepass_crypto_NativeAESCipherSpi_nInit(JNIEnv *env, jobject this,
+Java_com_ucsunup_keepass_crypto_NativeAESCipherSpi_nInit(JNIEnv *env, jobject this,
                                                          jboolean encrypting, jbyteArray key,
                                                          jbyteArray iv) {
     uint8_t ckey[32];
@@ -154,7 +154,7 @@ Java_com_android_keepass_crypto_NativeAESCipherSpi_nInit(JNIEnv *env, jobject th
 }
 
 JNIEXPORT void JNICALL
-Java_com_android_keepass_crypto_NativeAESCipherSpi_nCleanup(JNIEnv *env, jclass this, jlong state) {
+Java_com_ucsunup_keepass_crypto_NativeAESCipherSpi_nCleanup(JNIEnv *env, jclass this, jlong state) {
     free((void *) state);
 }
 
@@ -168,7 +168,7 @@ Java_com_android_keepass_crypto_NativeAESCipherSpi_nCleanup(JNIEnv *env, jclass 
 */
 
 JNIEXPORT jint JNICALL
-Java_com_android_keepass_crypto_NativeAESCipherSpi_nUpdate(JNIEnv *env, jobject this,
+Java_com_ucsunup_keepass_crypto_NativeAESCipherSpi_nUpdate(JNIEnv *env, jobject this,
                                                            jlong state, jbyteArray input,
                                                            jint inputOffset, jint inputLen,
                                                            jbyteArray output, jint outputOffset,
@@ -271,7 +271,7 @@ Java_com_android_keepass_crypto_NativeAESCipherSpi_nUpdate(JNIEnv *env, jobject 
   outputSize must be at least 16 for decryption
 */
 JNIEXPORT jint JNICALL
-Java_com_android_keepass_crypto_NativeAESCipherSpi_nFinal(JNIEnv *env, jobject this,
+Java_com_ucsunup_keepass_crypto_NativeAESCipherSpi_nFinal(JNIEnv *env, jobject this,
                                                           jlong state, jboolean doPadding,
                                                           jbyteArray output, jint outputOffset,
                                                           jint outputSize) {
@@ -384,7 +384,7 @@ Java_com_android_keepass_crypto_NativeAESCipherSpi_nFinal(JNIEnv *env, jobject t
 }
 
 JNIEXPORT jint JNICALL
-Java_com_android_keepass_crypto_NativeAESCipherSpi_nGetCacheSize(JNIEnv *env, jobject this,
+Java_com_ucsunup_keepass_crypto_NativeAESCipherSpi_nGetCacheSize(JNIEnv *env, jobject this,
                                                                  jlong state) {
     aes_state *c_state;
 
@@ -463,7 +463,7 @@ void *generate_key_material(void *arg) {
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_android_keepass_crypto_finalkey_NativeFinalKey_nTransformMasterKey(JNIEnv *env,
+Java_com_ucsunup_keepass_crypto_finalkey_NativeFinalKey_nTransformMasterKey(JNIEnv *env,
                                                                             jobject this,
                                                                             jbyteArray seed,
                                                                             jbyteArray key,
