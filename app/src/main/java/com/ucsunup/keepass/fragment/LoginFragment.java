@@ -45,6 +45,7 @@ import com.ucsunup.keepass.fileselect.BrowserDialog;
 import com.ucsunup.keepass.fileselect.RecentFileHistory;
 import com.ucsunup.keepass.timeout.TimeoutHelper;
 import com.ucsunup.keepass.utils.AnimatorUtils;
+import com.ucsunup.keepass.utils.Constants;
 import com.ucsunup.keepass.utils.EmptyUtils;
 import com.ucsunup.keepass.utils.Intents;
 import com.ucsunup.keepass.utils.Interaction;
@@ -58,14 +59,13 @@ import java.io.IOException;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FillUsrPwdFragment.OnFragmentInteractionListener} interface
+ * {@link LoginFragment.OnLoginListener} interface
  * to handle interaction events.
- * Use the {@link FillUsrPwdFragment#newInstance} factory method to
+ * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FillUsrPwdFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String DEFAULT_FILENAME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/keepass/keepass.kdbx";
     public static final String KEY_DEFAULT_FILENAME = "defaultFileName";
     public static final String ARG_FILENAME = "filename";
     public static final String ARG_KEYFILE = "keyfile";
@@ -85,7 +85,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     private boolean mRecentMode = false;
     private boolean mRememberKeyfile;
 
-    private OnFragmentInteractionListener mListener;
+    private OnLoginListener mListener;
     private FileOnFinish mFinish;
     private TextView mPassView;
     private TextView mPassConfView;
@@ -99,12 +99,12 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
         LOGIN, REGISTER
     }
 
-    public FillUsrPwdFragment() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
-    public static FillUsrPwdFragment newInstance(String fileName, String keyFile, boolean login) {
-        FillUsrPwdFragment fragment = new FillUsrPwdFragment();
+    public static LoginFragment newInstance(String fileName, String keyFile, boolean login) {
+        LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         args.putString(ARG_FILENAME, fileName);
         args.putString(ARG_KEYFILE, keyFile);
@@ -125,7 +125,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fill_usr_pwd, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override
@@ -153,8 +153,8 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnLoginListener) {
+            mListener = (OnLoginListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -279,7 +279,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnLoginListener {
         // TODO: get current database filepath
         String getCurrentFileName();
     }
@@ -536,7 +536,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
 
 //            populateView();
 
-            final View view = FillUsrPwdFragment.this.getView();
+            final View view = LoginFragment.this.getView();
             TextInputLayout passInputLayout = view.findViewById(R.id.pass_password);
             mPassView = passInputLayout.getEditText();
             ViewUtils.updateToogleView(getContext(), passInputLayout, R.drawable.password_toggle, null);
@@ -575,12 +575,12 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
                     });
             // Ok button
             Button okButton = view.findViewById(R.id.ok);
-            okButton.setOnClickListener(FillUsrPwdFragment.this);
+            okButton.setOnClickListener(LoginFragment.this);
             mFoldSwitch = view.findViewById(R.id.arrow_fold);
-            mFoldSwitch.setOnClickListener(FillUsrPwdFragment.this);
+            mFoldSwitch.setOnClickListener(LoginFragment.this);
 
             mDbName = view.findViewById(R.id.db_name);
-            mDbName.setOnClickListener(FillUsrPwdFragment.this);
+            mDbName.setOnClickListener(LoginFragment.this);
             mDbPath = view.findViewById(R.id.db_filepath);
             String fileName = mCurrentDbUri.getLastPathSegment();
             mDbName.setText(fileName.substring(0, fileName.indexOf(".")));
@@ -595,7 +595,7 @@ public class FillUsrPwdFragment extends Fragment implements View.OnClickListener
             // update checkbox state
             mSetDefaultDb = view.findViewById(R.id.set_default_db);
             String oldDefaultDb = PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .getString(KEY_DEFAULT_FILENAME, DEFAULT_FILENAME);
+                    .getString(KEY_DEFAULT_FILENAME, Constants.DEFAULT_FILENAME);
             if (UriUtil.equalsDefaultfile(mCurrentDbUri, oldDefaultDb)) {
                 mSetDefaultDb.setChecked(true);
             } else {

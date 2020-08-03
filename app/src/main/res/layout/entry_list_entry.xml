@@ -32,12 +32,15 @@
         android:padding="8dp"
         android:weightSum="1">
 
-        <ImageView
+        <com.ucsunup.keepass.view.AvatarImageView
             android:id="@+id/entry_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic99_blank" />
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic99_blank"
+            app:aiv_BoarderWidth="1dp"
+            app:aiv_ShowBoarder="true"
+            app:aiv_TextSizeRatio="0.4" />
 
         <TextView
             android:id="@+id/entry_text"

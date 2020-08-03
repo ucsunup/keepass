@@ -1,6 +1,6 @@
 /*
  * Copyright 2010-2015 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -46,15 +46,19 @@ public class PwIconStandard extends PwIcon {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         PwIconStandard other = (PwIconStandard) obj;
-        if (iconId != other.iconId)
+        if (iconId != other.iconId) {
             return false;
+        }
         return true;
     }
 }

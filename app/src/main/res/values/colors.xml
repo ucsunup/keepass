@@ -26,10 +26,10 @@
     <color name="colorPrimaryDark">#1F1F1F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="fab_background_normal">#e66352</color>
-    <color name="fab_background_press">#d81e06</color>
-    <color name="fab_sub_background_normal">#ed988d</color>
-    <color name="fab_sub_background_press">#e66352</color>
+    <color name="fab_background_normal">#ff4877ca</color>
+    <color name="fab_background_press">#aa4877ca</color>
+    <color name="fab_sub_background_normal">#ff4877ca</color>
+    <color name="fab_sub_background_press">#aa4877ca</color>
 
     <color name="btn_background">#4d4b4b</color>
 </resources>    

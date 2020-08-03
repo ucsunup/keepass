@@ -1,6 +1,6 @@
 /*
  * Copyright 2010-2011 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.ucsunup.keepass.R;
@@ -33,104 +34,125 @@ import com.ucsunup.keepass.compat.BitmapDrawableCompat;
 import com.ucsunup.keepass.database.PwIcon;
 import com.ucsunup.keepass.database.PwIconCustom;
 import com.ucsunup.keepass.database.PwIconStandard;
+import com.ucsunup.keepass.view.AvatarImageView;
 
 public class DrawableFactory {
-	private static Drawable blank = null;
-	private static int blankWidth = -1;
-	private static int blankHeight = -1;
-	
-	/** customIconMap
-	 *  Cache for icon drawable. 
-	 *  Keys: UUID, Values: Drawables
-	 */
-	private ReferenceMap customIconMap = new ReferenceMap(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
-	
-	/** standardIconMap
-	 *  Cache for icon drawable. 
-	 *  Keys: Integer, Values: Drawables
-	 */
-	private ReferenceMap standardIconMap = new ReferenceMap(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
-	
-	public void assignDrawableTo(ImageView iv, Resources res, PwIcon icon) {
-		Drawable draw = getIconDrawable(res, icon);
-		iv.setImageDrawable(draw);
-	}
-	
-	private Drawable getIconDrawable(Resources res, PwIcon icon) {
-		if (icon instanceof PwIconStandard) {
-			return getIconDrawable(res, (PwIconStandard) icon);
-		} else {
-			return getIconDrawable(res, (PwIconCustom) icon);
-		}
-	}
+    private static Drawable blank = null;
+    private static int blankWidth = -1;
+    private static int blankHeight = -1;
 
-	private static void initBlank(Resources res) {
-		if (blank==null) {
-			blank = res.getDrawable(R.drawable.ic99_blank);
-			blankWidth = blank.getIntrinsicWidth();
-			blankHeight = blank.getIntrinsicHeight();
-		}
-	}
-	
-	public Drawable getIconDrawable(Resources res, PwIconStandard icon) {
-		int resId = Icons.iconToResId(icon.iconId);
-		
-		Drawable draw = (Drawable) standardIconMap.get(resId);
-		if (draw == null) {
-			draw = res.getDrawable(resId);
-			standardIconMap.put(resId, draw);
-		}
-		
-		return draw;
-	}
+    /**
+     * customIconMap
+     * Cache for icon drawable.
+     * Keys: UUID, Values: Drawables
+     */
+    private ReferenceMap customIconMap = new ReferenceMap(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
 
-	public Drawable getIconDrawable(Resources res, PwIconCustom icon) {
-		initBlank(res);
-		if (icon == null) {
-			return blank;
-		}
-		
-		Drawable draw = (Drawable) customIconMap.get(icon.uuid);
-		
-		if (draw == null) {
-			if (icon.imageData == null) {
-				return blank;
-			}
-			
-			Bitmap bitmap = BitmapFactory.decodeByteArray(icon.imageData, 0, icon.imageData.length);
-			
-			// Could not understand custom icon
-			if (bitmap == null) {
-				return blank;
-			}
-			
-			bitmap = resize(bitmap);
-			
-			draw = BitmapDrawableCompat.getBitmapDrawable(res, bitmap);
-			customIconMap.put(icon.uuid, draw);
-		}
-		
-		return draw;
-	}
-	
-	/** Resize the custom icon to match the built in icons
-	 * @param bitmap
-	 * @return
-	 */
-	private Bitmap resize(Bitmap bitmap) {
-		int width = bitmap.getWidth();
-		int height = bitmap.getHeight();
-		
-		if (width == blankWidth && height == blankHeight) {
-			return bitmap;
-		}
-		
-		return Bitmap.createScaledBitmap(bitmap, blankWidth, blankHeight, true);
-	}
-	
-	public void clear() {
-		standardIconMap.clear();
-		customIconMap.clear();
-	}
-	
+    /**
+     * standardIconMap
+     * Cache for icon drawable.
+     * Keys: Integer, Values: Drawables
+     */
+    private ReferenceMap standardIconMap = new ReferenceMap(AbstractReferenceMap.HARD, AbstractReferenceMap.WEAK);
+
+    public void assignDrawableTo(AvatarImageView aiv, String name, Resources res, PwIcon icon) {
+        Drawable draw = getIconDrawable(res, icon);
+        Log.d("mmstest", "name = " + name);
+        if (draw != null) {
+            aiv.setImageDrawable(draw);
+        } else {
+            aiv.setTextAndColorSeed(name.substring(0, 1), name);
+        }
+    }
+
+    public void assignDrawableTo(ImageView iv, Resources res, PwIcon icon) {
+        Drawable draw = getIconDrawable(res, icon);
+        iv.setImageDrawable(draw);
+    }
+
+    private Drawable getIconDrawable(Resources res, PwIcon icon) {
+        if (icon instanceof PwIconStandard) {
+            return getIconDrawable(res, (PwIconStandard) icon);
+        } else {
+            return getIconDrawable(res, (PwIconCustom) icon);
+        }
+    }
+
+    private static void initBlank(Resources res) {
+        if (blank == null) {
+            blank = res.getDrawable(R.drawable.ic99_blank);
+            blankWidth = blank.getIntrinsicWidth();
+            blankHeight = blank.getIntrinsicHeight();
+        }
+    }
+
+    public Drawable getIconDrawable(Resources res, PwIconStandard icon) {
+        int resId = Icons.iconToResId(icon.iconId);
+
+        // check if default, if return null, and will set WordPhoto
+        if (resId == R.drawable.ic00) {
+            Log.d("mmstest", "return : " + resId);
+            return null;
+        }
+
+        Drawable draw = (Drawable) standardIconMap.get(resId);
+        if (draw == null) {
+            draw = res.getDrawable(resId);
+            standardIconMap.put(resId, draw);
+        }
+
+        return draw;
+    }
+
+    public Drawable getIconDrawable(Resources res, PwIconCustom icon) {
+        initBlank(res);
+        if (icon == null) {
+            return blank;
+        }
+
+        Drawable draw = (Drawable) customIconMap.get(icon.uuid);
+
+        if (draw == null) {
+            if (icon.imageData == null) {
+                return blank;
+            }
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(icon.imageData, 0, icon.imageData.length);
+
+            // Could not understand custom icon
+            if (bitmap == null) {
+                return blank;
+            }
+
+            bitmap = resize(bitmap);
+
+            draw = BitmapDrawableCompat.getBitmapDrawable(res, bitmap);
+            customIconMap.put(icon.uuid, draw);
+        }
+
+        return draw;
+    }
+
+    /**
+     * Resize the custom icon to match the built in icons
+     *
+     * @param bitmap
+     * @return
+     */
+    private Bitmap resize(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width == blankWidth && height == blankHeight) {
+            return bitmap;
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, blankWidth, blankHeight, true);
+    }
+
+    public void clear() {
+        standardIconMap.clear();
+        customIconMap.clear();
+    }
+
 }

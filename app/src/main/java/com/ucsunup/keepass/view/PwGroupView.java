@@ -71,8 +71,8 @@ public class PwGroupView extends ClickView {
     private void populateView(View gv, PwGroup pw) {
         mPw = pw;
 
-        ImageView iv = (ImageView) gv.findViewById(R.id.group_icon);
-        App.getDB().drawFactory.assignDrawableTo(iv, getResources(), pw.getIcon());
+        AvatarImageView iv = (AvatarImageView) gv.findViewById(R.id.group_icon);
+        App.getDB().drawFactory.assignDrawableTo(iv, mPw.getName(), getResources(), pw.getIcon());
 
         mTv.setText(pw.getName());
     }

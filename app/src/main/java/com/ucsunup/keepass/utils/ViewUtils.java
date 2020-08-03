@@ -56,7 +56,7 @@ public class ViewUtils {
                         // We need to add a dummy drawable as the end compound drawable so that the text is
                         // indented and doesn't display below the toggle view
                         Drawable dummyDrawable = new ColorDrawable();
-                        dummyDrawable.setBounds(0, 0, Util.dip2px(context, finalPasswordToggleView.getMeasuredWidth()), 1);
+                        dummyDrawable.setBounds(0, 0, finalPasswordToggleView.getMeasuredWidth(), 1);
                         Drawable[] compounds = TextViewCompat.getCompoundDrawablesRelative(editText);
                         TextViewCompat.setCompoundDrawablesRelative(editText, compounds[0], compounds[1],
                                 dummyDrawable, compounds[3]);

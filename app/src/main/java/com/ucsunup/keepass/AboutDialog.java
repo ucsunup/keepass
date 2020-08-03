@@ -1,6 +1,6 @@
 /*
  * Copyright 2009-2011 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify

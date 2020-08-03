@@ -20,7 +20,7 @@
     <item
         android:id="@+id/menu_db_advanced_setting"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/menu_db_advanced_setting" />
+        android:title="@string/open_recent" />
     <item
         android:id="@+id/menu_about"
         android:icon="@android:drawable/ic_menu_share"

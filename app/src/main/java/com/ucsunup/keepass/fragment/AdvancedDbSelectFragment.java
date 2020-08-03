@@ -1,8 +1,6 @@
 package com.ucsunup.keepass.fragment;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,30 +15,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ucsunup.keepass.R;
 import com.ucsunup.keepass.PasswordActivity;
 import com.ucsunup.keepass.app.App;
-import com.ucsunup.keepass.compat.StorageAF;
-import com.ucsunup.keepass.fileselect.BrowserDialog;
 import com.ucsunup.keepass.fileselect.RecentFileHistory;
-import com.ucsunup.keepass.utils.Intents;
-import com.ucsunup.keepass.utils.Interaction;
+import com.ucsunup.keepass.utils.Constants;
 import com.ucsunup.keepass.utils.Util;
-import com.ucsunup.keepass.view.FileNameView;
+
+import com.github.clans.fab.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AdvancedFileSelectFragment.OnFragmentInteractionListener} interface
+ * {@link AdvancedDbSelectFragment.OnDbSelectListener} interface
  * to handle interaction events.
- * Use the {@link AdvancedFileSelectFragment#newInstance} factory method to
+ * Use the {@link AdvancedDbSelectFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * @author ucsunup
  */
-public class AdvancedFileSelectFragment extends Fragment implements View.OnClickListener {
+public class AdvancedDbSelectFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -48,25 +44,20 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnDbSelectListener mListener;
     private RecyclerView mList;
     private BaseListAdapter mAdapter;
-    private EditText mFilename;
 
     private RecentFileHistory mFileHistory;
     private boolean mRecentMode = false;
     private static final int CMENU_CLEAR = Menu.FIRST;
 
-    public static final int FILE_BROWSE = 1;
-    public static final int GET_CONTENT = 2;
-    public static final int OPEN_DOC = 3;
-
-    public AdvancedFileSelectFragment() {
+    public AdvancedDbSelectFragment() {
         // Required empty public constructor
     }
 
-    public static AdvancedFileSelectFragment newInstance(String param1, String param2) {
-        AdvancedFileSelectFragment fragment = new AdvancedFileSelectFragment();
+    public static AdvancedDbSelectFragment newInstance(String param1, String param2) {
+        AdvancedDbSelectFragment fragment = new AdvancedDbSelectFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -96,35 +87,12 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mList.setItemAnimator(new DefaultItemAnimator());
 
-        mFilename = (EditText) view.findViewById(R.id.file_filename);
-        // Open button
-        Button openButton = (Button) view.findViewById(R.id.open);
-        openButton.setOnClickListener(this);
-        // Create button
-        Button createButton = (Button) view.findViewById(R.id.create);
-        createButton.setOnClickListener(this);
-        ((FileNameView) view.findViewById(R.id.file_select)).setOnToggleViewClickListener(new View.OnClickListener() {
+        FloatingActionButton editDbBtn = view.findViewById(R.id.db_edit);
+        editDbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (StorageAF.useStorageFramework(getActivity())) {
-                    Intent i = new Intent(StorageAF.ACTION_OPEN_DOCUMENT);
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("*/*");
-                    i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                    startActivityForResult(i, OPEN_DOC);
-                } else {
-                    Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.setType("*/*");
-
-                    try {
-                        startActivityForResult(i, GET_CONTENT);
-                    } catch (ActivityNotFoundException e) {
-                        lookForOpenIntentsFilePicker();
-                    } catch (SecurityException e) {
-                        lookForOpenIntentsFilePicker();
-                    }
-                }
+                AdvancedDbEditFragment dialog = AdvancedDbEditFragment.newInstance(Constants.DEFAULT_FILENAME);
+                AdvancedDbSelectFragment.this.getChildFragmentManager().beginTransaction().add(dialog, "edit_db").commit();
             }
         });
 
@@ -137,8 +105,8 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnDbSelectListener) {
+            mListener = (OnDbSelectListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -160,10 +128,6 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
 
                 mListener.openDatabase(filename, null);
                 break;
-            case R.id.create:
-                filename = Util.getEditText(getActivity(), R.id.file_filename);
-                mListener.setPwdForNewDatabase(filename, null);
-                break;
         }
     }
 
@@ -171,14 +135,12 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
         menu.add(0, CMENU_CLEAR, 0, R.string.remove_from_filelist);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         super.onContextItemSelected(item);
-
         if (item.getItemId() == CMENU_CLEAR) {
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
@@ -215,37 +177,18 @@ public class AdvancedFileSelectFragment extends Fragment implements View.OnClick
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void setPwdForNewDatabase(String fileName, String keyFile);
-
+    public interface OnDbSelectListener {
+        /**
+         * Open database callback
+         *
+         * @param fileName
+         * @param keyFile
+         */
         void openDatabase(String fileName, String keyFile);
-    }
-
-    private void lookForOpenIntentsFilePicker() {
-
-        if (Interaction.isIntentAvailable(getActivity(), Intents.OPEN_INTENTS_FILE_BROWSE)) {
-            Intent i = new Intent(Intents.OPEN_INTENTS_FILE_BROWSE);
-            i.setData(Uri.parse("file://" + Util.getEditText(getActivity(), R.id.file_filename)));
-            try {
-                startActivityForResult(i, FILE_BROWSE);
-            } catch (ActivityNotFoundException e) {
-                showBrowserDialog();
-            }
-
-        } else {
-            showBrowserDialog();
-        }
-    }
-
-    private void showBrowserDialog() {
-        BrowserDialog diag = new BrowserDialog(getActivity());
-        diag.show();
     }
 
     private void fillData() {
         // Set the initial value of the filename
-        mFilename.setText(PasswordActivity.DEFAULT_FILENAME);
         mAdapter = new BaseListAdapter(mFileHistory.getDbList());
         mAdapter.setOnClickListener(new CardListAdapter.OnClickListener() {
             @Override

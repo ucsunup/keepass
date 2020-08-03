@@ -1,6 +1,6 @@
 /*
  * Copyright 2009-2015 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -67,7 +67,6 @@ public class Util {
 
     public static String getEditText(Activity act, int resId) {
         TextView te = (TextView) act.findViewById(resId);
-
         if (te != null) {
             return te.getText().toString();
         } else {

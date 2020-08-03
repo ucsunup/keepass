@@ -1,6 +1,6 @@
 /*
  * Copyright 2009-2016 Brian Pellin.
- *     
+ *
  * This file is part of KeePassDroid.
  *
  *  KeePassDroid is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,22 +42,27 @@ import com.ucsunup.keepass.R;
 import com.ucsunup.keepass.PasswordActivity;
 import com.ucsunup.keepass.compat.ContentResolverCompat;
 import com.ucsunup.keepass.compat.StorageAF;
-import com.ucsunup.keepass.fragment.AdvancedFileSelectFragment;
-import com.ucsunup.keepass.fragment.FillUsrPwdFragment;
+import com.ucsunup.keepass.fragment.AdvancedDbEditFragment;
+import com.ucsunup.keepass.fragment.AdvancedDbSelectFragment;
+import com.ucsunup.keepass.fragment.LoginFragment;
+import com.ucsunup.keepass.utils.Constants;
 import com.ucsunup.keepass.utils.UriUtil;
 
 import java.io.File;
 import java.net.URLDecoder;
 
-public class FileSelectActivity extends AppCompatActivity implements View.OnClickListener, FillUsrPwdFragment.OnFragmentInteractionListener,
-        AdvancedFileSelectFragment.OnFragmentInteractionListener {
+/**
+ * @author ucsunup
+ */
+public class FileSelectActivity extends AppCompatActivity implements View.OnClickListener, LoginFragment.OnLoginListener,
+        AdvancedDbSelectFragment.OnDbSelectListener, AdvancedDbEditFragment.OnDbEditListener {
 
     public static final int REQUEST_CODE_FILE_BROWSE = 1;
     public static final int REQUEST_CODE_GET_CONTENT = 2;
     public static final int OPEN_DOC = 3;
 
     // fragment tag
-    public static final String TAG_FRAGMENT_FILLUSRPWDFRAGMENT = "fillusrpwdfragment";
+    public static final String TAG_FRAGMENT_LOGINFRAGMENT = "loginfragment";
     public static final String TAG_FRAGMENT_ADVANCEDFILESELECTFRAGMENT = "advancedfileselectfragment";
 
     private FragmentManager mFragmentManager;
@@ -70,9 +76,9 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
 
         // Load default database
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String fileName = prefs.getString(PasswordActivity.KEY_DEFAULT_FILENAME, FillUsrPwdFragment.DEFAULT_FILENAME);
+        String fileName = prefs.getString(PasswordActivity.KEY_DEFAULT_FILENAME, Constants.DEFAULT_FILENAME);
         if (TextUtils.isEmpty(fileName)) {
-            fileName = FillUsrPwdFragment.DEFAULT_FILENAME;
+            fileName = Constants.DEFAULT_FILENAME;
         }
 
         // Judge if not init databse file
@@ -82,7 +88,7 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
             needInitDBFile = false;
         }
 
-        showFillUsrPwdFragment(true, fileName, null, !needInitDBFile);
+        showLoginFragment(true, fileName, null, !needInitDBFile);
     }
 
     @Override
@@ -161,7 +167,7 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                showFillUsrPwdFragment(false, null, null, true);
+                showLoginFragment(false, null, null, true);
                 break;
             case R.id.menu_about:
                 new AboutDialog(this).show();
@@ -178,7 +184,7 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         if (!mLoginMode) {
-            showFillUsrPwdFragment(false, null, null, true);
+            showLoginFragment(false, null, null, true);
         } else {
             super.onBackPressed();
         }
@@ -190,17 +196,17 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void setPwdForNewDatabase(String fileName, String keyFile) {
-        // TODO: goto FillUsrPwdFragment for setting
-        showFillUsrPwdFragment(true, fileName, keyFile, false);
+    public void createDatabase(String fileName, String keyFile) {
+        // TODO: goto LoginFragment for setting
+        showLoginFragment(true, fileName, keyFile, false);
     }
 
     @Override
     public void openDatabase(String fileName, String keyFile) {
-        showFillUsrPwdFragment(true, fileName, keyFile, true);
+        showLoginFragment(true, fileName, keyFile, true);
     }
 
-    private void showFillUsrPwdFragment(boolean refresh, String fileName, String keyFile, boolean login) {
+    private void showLoginFragment(boolean refresh, String fileName, String keyFile, boolean login) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mLoginMode = true;
         getSupportActionBar().setTitle(R.string.app_name);
@@ -212,22 +218,23 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
         if (settingFragment != null) {
             fragmentTransaction.hide(settingFragment);
         }
-        Fragment loginFragment = mFragmentManager.findFragmentByTag(TAG_FRAGMENT_FILLUSRPWDFRAGMENT);
+        Fragment loginFragment = mFragmentManager.findFragmentByTag(TAG_FRAGMENT_LOGINFRAGMENT);
+        Log.d("mmstest", "showLogin: " + fileName + ", " + keyFile);
         if (loginFragment == null || refresh) {
             fragmentTransaction.add(R.id.content,
-                    FillUsrPwdFragment.newInstance(fileName, keyFile, false),
-                    TAG_FRAGMENT_FILLUSRPWDFRAGMENT)
+                    LoginFragment.newInstance(fileName, keyFile, false),
+                    TAG_FRAGMENT_LOGINFRAGMENT)
                     .commitAllowingStateLoss();
             return;
         } else if (refresh) {
 //            Bundle args = loginFragment.getArguments();
 //            args.clear();
-//            args.putString(FillUsrPwdFragment.ARG_FILENAME, fileName);
-//            args.putString(FillUsrPwdFragment.ARG_KEYFILE, keyFile);
-//            args.putBoolean(FillUsrPwdFragment.ARG_MODEL, login);
+//            args.putString(LoginFragment.ARG_FILENAME, fileName);
+//            args.putString(LoginFragment.ARG_KEYFILE, keyFile);
+//            args.putBoolean(LoginFragment.ARG_MODEL, login);
 //            fragmentTransaction.replace(R.id.content,
 //                    loginFragment,
-//                    TAG_FRAGMENT_FILLUSRPWDFRAGMENT)
+//                    TAG_FRAGMENT_LOGINFRAGMENT)
 //                    .commitAllowingStateLoss();
 //            return;
         }
@@ -243,7 +250,7 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
             mFragmentManager = getSupportFragmentManager();
         }
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        Fragment loginFragment = mFragmentManager.findFragmentByTag(TAG_FRAGMENT_FILLUSRPWDFRAGMENT);
+        Fragment loginFragment = mFragmentManager.findFragmentByTag(TAG_FRAGMENT_LOGINFRAGMENT);
         if (loginFragment != null) {
             fragmentTransaction.hide(loginFragment);
         }
@@ -251,7 +258,7 @@ public class FileSelectActivity extends AppCompatActivity implements View.OnClic
         Fragment settingFragment = mFragmentManager.findFragmentByTag(TAG_FRAGMENT_ADVANCEDFILESELECTFRAGMENT);
         if (settingFragment == null) {
             fragmentTransaction.add(R.id.content,
-                    AdvancedFileSelectFragment.newInstance(null, null),
+                    AdvancedDbSelectFragment.newInstance(null, null),
                     TAG_FRAGMENT_ADVANCEDFILESELECTFRAGMENT)
                     .commitAllowingStateLoss();
             return;

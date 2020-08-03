@@ -55,8 +55,6 @@ import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +71,6 @@ import com.ucsunup.keepass.utils.Intents;
 import com.ucsunup.keepass.utils.EmptyUtils;
 import com.ucsunup.keepass.utils.Types;
 import com.ucsunup.keepass.utils.Util;
-import com.ucsunup.keepass.app.KeePass;
 
 public class EntryActivity extends LockCloseHideActivity {
     public static final String KEY_ENTRY = "entry";
@@ -282,7 +279,7 @@ public class EntryActivity extends LockCloseHideActivity {
             mListAdapter.refreshData(data);
         }
         if (mRecyclerView == null) {
-            mRecyclerView = (RecyclerView) findViewById(R.id.entry_recylerview);
+            mRecyclerView = (RecyclerView) findViewById(R.id.entry_recyclerview);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         }

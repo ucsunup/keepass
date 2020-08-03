@@ -71,8 +71,8 @@ public class PwEntryView extends ClickView {
         mPw = pw;
         mPos = pos;
 
-        ImageView iv = (ImageView) ev.findViewById(R.id.entry_icon);
-        App.getDB().drawFactory.assignDrawableTo(iv, getResources(), pw.getIcon());
+        AvatarImageView iv = (AvatarImageView) ev.findViewById(R.id.entry_icon);
+        App.getDB().drawFactory.assignDrawableTo(iv, mPw.getDisplayTitle(), getResources(), pw.getIcon());
 
         mTv.setText(mPw.getDisplayTitle());
     }

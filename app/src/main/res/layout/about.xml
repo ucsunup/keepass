@@ -25,6 +25,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/btn_background"
         android:padding="15dp">
 
         <TextView
@@ -130,12 +131,10 @@
 
     <Button
         android:id="@+id/donate_button"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="-15dp"
-        android:layout_marginTop="10dp"
         android:width="100sp"
-        android:background="@color/btn_background"
         android:text="@string/menu_donate" />
 </LinearLayout>

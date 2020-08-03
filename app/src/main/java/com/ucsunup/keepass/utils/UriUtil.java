@@ -48,7 +48,7 @@ public class UriUtil {
     }
 
     public static Uri parseDefaultFile(Uri uri) {
-        if (EmptyUtils.isNullOrEmpty(uri.getScheme())) {
+        if (uri != null && EmptyUtils.isNullOrEmpty(uri.getScheme())) {
             uri = uri.buildUpon().scheme("file").authority("").build();
         }
 
@@ -63,7 +63,9 @@ public class UriUtil {
     }
 
     public static InputStream getUriInputStream(Context ctx, Uri uri) throws FileNotFoundException {
-        if (uri == null) return null;
+        if (uri == null) {
+            return null;
+        }
 
         String scheme = uri.getScheme();
         if (EmptyUtils.isNullOrEmpty(scheme) || scheme.equals("file")) {
